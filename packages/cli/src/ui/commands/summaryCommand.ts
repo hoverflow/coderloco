@@ -11,7 +11,7 @@ import {
   CommandKind,
   type SlashCommandActionReturn,
 } from './types.js';
-import { getProjectSummaryPrompt } from '@qwen-code/qwen-code-core';
+import { getProjectSummaryPrompt } from '@coderloco/coderloco-core';
 import type { HistoryItemSummary } from '../types.js';
 
 export const summaryCommand: SlashCommand = {

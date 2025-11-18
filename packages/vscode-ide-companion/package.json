@@ -1,13 +1,13 @@
 {
-  "name": "qwen-code-vscode-ide-companion",
-  "displayName": "Qwen Code Companion",
-  "description": "Enable Qwen Code with direct access to your VS Code workspace.",
+  "name": "coderloco-vscode-ide-companion",
+  "displayName": "CoderLoco Companion",
+  "description": "Enable CoderLoco with direct access to your VS Code workspace.",
   "version": "0.2.2",
-  "publisher": "qwenlm",
+  "publisher": "hoverflow",
   "icon": "assets/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/QwenLM/qwen-code.git",
+    "url": "https://github.com/hoverflow/coderloco.git",
     "directory": "packages/vscode-ide-companion"
   },
   "engines": {
@@ -19,13 +19,13 @@
     "AI"
   ],
   "keywords": [
-    "qwen-code",
-    "qwen code",
-    "qwen",
-    "qwen code",
+    "coderloco",
+    "coder loco",
+    "loco",
     "cli",
     "ide integration",
-    "ide companion"
+    "ide companion",
+    "ai coding"
   ],
   "activationEvents": [
     "onStartupFinished"
@@ -33,63 +33,63 @@
   "contributes": {
     "languages": [
       {
-        "id": "qwen-diff-editable"
+        "id": "loco-diff-editable"
       }
     ],
     "commands": [
       {
-        "command": "qwen.diff.accept",
-        "title": "Qwen Code: Accept Current Diff",
+        "command": "loco.diff.accept",
+        "title": "CoderLoco: Accept Current Diff",
         "icon": "$(check)"
       },
       {
-        "command": "qwen.diff.cancel",
-        "title": "Qwen Code: Close Diff Editor",
+        "command": "loco.diff.cancel",
+        "title": "CoderLoco: Close Diff Editor",
         "icon": "$(close)"
       },
       {
-        "command": "qwen-code.runQwenCode",
-        "title": "Qwen Code: Run"
+        "command": "coderloco.runCoderLoco",
+        "title": "CoderLoco: Run"
       },
       {
-        "command": "qwen-code.showNotices",
-        "title": "Qwen Code: View Third-Party Notices"
+        "command": "coderloco.showNotices",
+        "title": "CoderLoco: View Third-Party Notices"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "qwen.diff.accept",
-          "when": "qwen.diff.isVisible"
+          "command": "loco.diff.accept",
+          "when": "loco.diff.isVisible"
         },
         {
-          "command": "qwen.diff.cancel",
-          "when": "qwen.diff.isVisible"
+          "command": "loco.diff.cancel",
+          "when": "loco.diff.isVisible"
         }
       ],
       "editor/title": [
         {
-          "command": "qwen.diff.accept",
-          "when": "qwen.diff.isVisible",
+          "command": "loco.diff.accept",
+          "when": "loco.diff.isVisible",
           "group": "navigation"
         },
         {
-          "command": "qwen.diff.cancel",
-          "when": "qwen.diff.isVisible",
+          "command": "loco.diff.cancel",
+          "when": "loco.diff.isVisible",
           "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "qwen.diff.accept",
+        "command": "loco.diff.accept",
         "key": "ctrl+s",
-        "when": "qwen.diff.isVisible"
+        "when": "loco.diff.isVisible"
       },
       {
-        "command": "qwen.diff.accept",
+        "command": "loco.diff.accept",
         "key": "cmd+s",
-        "when": "qwen.diff.isVisible"
+        "when": "loco.diff.isVisible"
       }
     ]
   },

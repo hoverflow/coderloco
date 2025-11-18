@@ -10,11 +10,10 @@ import { ModelDialog } from './ModelDialog.js';
 import { useKeypress } from '../hooks/useKeypress.js';
 import { DescriptiveRadioButtonSelect } from './shared/DescriptiveRadioButtonSelect.js';
 import { ConfigContext } from '../contexts/ConfigContext.js';
-import type { Config } from '@qwen-code/qwen-code-core';
+import type { Config } from '@coderloco/coderloco-core';
 import {
   AVAILABLE_MODELS_QWEN,
   MAINLINE_CODER,
-  MAINLINE_VLM,
 } from '../models/availableModels.js';
 
 vi.mock('../hooks/useKeypress.js', () => ({
@@ -92,18 +91,17 @@ describe('<ModelDialog />', () => {
     const props = mockedSelect.mock.calls[0][0];
     expect(props.items).toHaveLength(AVAILABLE_MODELS_QWEN.length);
     expect(props.items[0].value).toBe(MAINLINE_CODER);
-    expect(props.items[1].value).toBe(MAINLINE_VLM);
     expect(props.showNumbers).toBe(true);
   });
 
   it('initializes with the model from ConfigContext', () => {
-    const mockGetModel = vi.fn(() => MAINLINE_VLM);
+    const mockGetModel = vi.fn(() => MAINLINE_CODER);
     renderComponent({}, { getModel: mockGetModel });
 
     expect(mockGetModel).toHaveBeenCalled();
     expect(mockedSelect).toHaveBeenCalledWith(
       expect.objectContaining({
-        initialIndex: 1,
+        initialIndex: 0,
       }),
       undefined,
     );
@@ -208,7 +206,7 @@ describe('<ModelDialog />', () => {
 
     expect(mockedSelect.mock.calls[0][0].initialIndex).toBe(0);
 
-    mockGetModel.mockReturnValue(MAINLINE_VLM);
+    mockGetModel.mockReturnValue(MAINLINE_CODER);
     const newMockConfig = {
       getModel: mockGetModel,
       getAuthType: mockGetAuthType,

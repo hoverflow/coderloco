@@ -30,7 +30,6 @@ import process from 'node:process';
 import { type UseHistoryManagerReturn } from '../hooks/useHistoryManager.js';
 import { IdeTrustChangeDialog } from './IdeTrustChangeDialog.js';
 import { WelcomeBackDialog } from './WelcomeBackDialog.js';
-import { ModelSwitchDialog } from './ModelSwitchDialog.js';
 import { AgentCreationWizard } from './subagents/create/AgentCreationWizard.js';
 import { AgentsManagerDialog } from './subagents/manage/AgentsManagerDialog.js';
 import {
@@ -203,9 +202,6 @@ export const DialogManager = ({
   }
   if (uiState.isModelDialogOpen) {
     return <ModelDialog onClose={uiActions.closeModelDialog} />;
-  }
-  if (uiState.isVisionSwitchDialogOpen) {
-    return <ModelSwitchDialog onSelect={uiActions.handleVisionSwitchSelect} />;
   }
   if (uiState.isAuthenticating) {
     // Show Qwen OAuth progress if it's Qwen auth and OAuth is active

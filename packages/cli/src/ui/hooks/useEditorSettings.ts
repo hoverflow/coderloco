@@ -7,11 +7,11 @@
 import { useState, useCallback } from 'react';
 import type { LoadedSettings, SettingScope } from '../../config/settings.js';
 import { type HistoryItem, MessageType } from '../types.js';
-import type { EditorType } from '@qwen-code/qwen-code-core';
+import type { EditorType } from '@coderloco/coderloco-core';
 import {
   allowEditorTypeInSandbox,
   checkHasEditorType,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 
 interface UseEditorSettingsReturn {
   isEditorDialogOpen: boolean;

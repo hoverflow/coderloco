@@ -9,7 +9,7 @@ import type { CompressionProps } from '../../types.js';
 import Spinner from 'ink-spinner';
 import { theme } from '../../semantic-colors.js';
 import { SCREEN_READER_MODEL_PREFIX } from '../../textConstants.js';
-import { CompressionStatus } from '@qwen-code/qwen-code-core';
+import { CompressionStatus } from '@coderloco/coderloco-core';
 
 export interface CompressionDisplayProps {
   compression: CompressionProps;

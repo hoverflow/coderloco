@@ -9,7 +9,7 @@ import {
   getProjectSummaryInfo,
   type ProjectSummaryInfo,
   type Config,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 import { type Settings } from '../../config/settingsSchema.js';
 
 export interface WelcomeBackState {

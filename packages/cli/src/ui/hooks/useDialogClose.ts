@@ -6,7 +6,7 @@
 
 import { useCallback } from 'react';
 import { SettingScope } from '../../config/settings.js';
-import type { AuthType, ApprovalMode } from '@qwen-code/qwen-code-core';
+import type { AuthType, ApprovalMode } from '@coderloco/coderloco-core';
 
 export interface DialogCloseOptions {
   // Theme dialog

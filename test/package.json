@@ -1,0 +1,10 @@
+{
+  "name": "coderloco-tests",
+  "version": "0.0.1",
+  "description": "Test scripts per ottimizzazione subagenti",
+  "private": true,
+  "scripts": {
+    "test:intent": "node intent-classifier-test.js",
+    "test:all": "node intent-classifier-test.js"
+  }
+}

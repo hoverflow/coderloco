@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Config } from '@qwen-code/qwen-code-core';
+import type { Config } from '@coderloco/coderloco-core';
 import {
   OutputFormat,
   JsonFormatter,
@@ -12,7 +12,7 @@ import {
   FatalTurnLimitedError,
   FatalToolExecutionError,
   FatalCancellationError,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 
 export function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {

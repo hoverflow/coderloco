@@ -209,6 +209,15 @@ export interface SandboxConfig {
   image: string;
 }
 
+export interface IntentClassificationSettings {
+  enabled?: boolean;
+  confidenceThreshold?: number;
+  showBanner?: boolean;
+  showMetrics?: boolean;
+  classificationEndpoint?: string;
+  classificationModel?: string;
+}
+
 export interface ConfigParameters {
   sessionId: string;
   embeddingModel?: string;
@@ -282,7 +291,6 @@ export interface ConfigParameters {
   extensionManagement?: boolean;
   enablePromptCompletion?: boolean;
   skipLoopDetection?: boolean;
-  vlmSwitchMode?: string;
   truncateToolOutputThreshold?: number;
   truncateToolOutputLines?: number;
   enableToolOutputTruncation?: boolean;
@@ -290,6 +298,7 @@ export interface ConfigParameters {
   useSmartEdit?: boolean;
   output?: OutputSettings;
   skipStartupContext?: boolean;
+  intentClassification?: IntentClassificationSettings;
 }
 
 export class Config {
@@ -380,7 +389,6 @@ export class Config {
   private readonly enablePromptCompletion: boolean = false;
   private readonly skipLoopDetection: boolean;
   private readonly skipStartupContext: boolean;
-  private readonly vlmSwitchMode: string | undefined;
   private initialized: boolean = false;
   readonly storage: Storage;
   private readonly fileExclusions: FileExclusions;
@@ -496,7 +504,6 @@ export class Config {
     this.extensionManagement = params.extensionManagement ?? true;
     this.storage = new Storage(this.targetDir);
     this.enablePromptCompletion = params.enablePromptCompletion ?? false;
-    this.vlmSwitchMode = params.vlmSwitchMode;
     this.fileExclusions = new FileExclusions(this);
     this.eventEmitter = params.eventEmitter;
     this.outputSettings = {
@@ -1047,10 +1054,6 @@ export class Config {
 
   getSkipStartupContext(): boolean {
     return this.skipStartupContext;
-  }
-
-  getVlmSwitchMode(): string | undefined {
-    return this.vlmSwitchMode;
   }
 
   getEnableToolOutputTruncation(): boolean {

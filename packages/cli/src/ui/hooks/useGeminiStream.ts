@@ -16,7 +16,8 @@ import type {
   ThoughtSummary,
   ToolCallRequestInfo,
   GeminiErrorEventValue,
-} from '@qwen-code/qwen-code-core';
+  SubagentType,
+} from '@coderloco/coderloco-core';
 import {
   GeminiEventType as ServerGeminiEventType,
   getErrorMessage,
@@ -35,7 +36,8 @@ import {
   ToolConfirmationOutcome,
   logApiCancel,
   ApiCancelEvent,
-} from '@qwen-code/qwen-code-core';
+  classifyIntent,
+} from '@coderloco/coderloco-core';
 import { type Part, type PartListUnion, FinishReason } from '@google/genai';
 import type {
   HistoryItem,
@@ -46,7 +48,6 @@ import type {
 import { StreamingState, MessageType, ToolCallStatus } from '../types.js';
 import { isAtCommand, isSlashCommand } from '../utils/commandUtils.js';
 import { useShellCommandProcessor } from './shellCommandProcessor.js';
-import { useVisionAutoSwitch } from './useVisionAutoSwitch.js';
 import { handleAtCommand } from './atCommandProcessor.js';
 import { findLastSafeSplitPoint } from '../utils/markdownUtilities.js';
 import { useStateAndRef } from './useStateAndRef.js';
@@ -104,15 +105,9 @@ export const useGeminiStream = (
   setModelSwitchedFromQuotaError: React.Dispatch<React.SetStateAction<boolean>>,
   onEditorClose: () => void,
   onCancelSubmit: () => void,
-  visionModelPreviewEnabled: boolean,
   setShellInputFocused: (value: boolean) => void,
   terminalWidth: number,
   terminalHeight: number,
-  onVisionSwitchRequired?: (query: PartListUnion) => Promise<{
-    modelOverride?: string;
-    persistSessionModel?: string;
-    showGuidance?: boolean;
-  }>,
   isShellFocused?: boolean,
 ) => {
   const [initError, setInitError] = useState<string | null>(null);
@@ -124,6 +119,13 @@ export const useGeminiStream = (
   const [pendingHistoryItem, pendingHistoryItemRef, setPendingHistoryItem] =
     useStateAndRef<HistoryItemWithoutId | null>(null);
   const processedMemoryToolsRef = useRef<Set<string>>(new Set());
+
+  // Subagent state
+  const [currentSubagent, setCurrentSubagent] = useState<{
+    type: SubagentType;
+    confidence: number;
+    status: 'classifying' | 'active' | 'completed';
+  } | null>(null);
   const { startNewPrompt, getPromptCount } = useSessionStats();
   const storage = config.storage;
   const logger = useLogger(storage);
@@ -200,12 +202,6 @@ export const useGeminiStream = (
     terminalHeight,
   );
 
-  const { handleVisionSwitch, restoreOriginalModel } = useVisionAutoSwitch(
-    config,
-    addItem,
-    visionModelPreviewEnabled,
-    onVisionSwitchRequired,
-  );
   const activePtyId = activeShellPtyId || activeToolPtyId;
 
   useEffect(() => {
@@ -336,6 +332,45 @@ export const useGeminiStream = (
         onDebugMessage(`User query: '${trimmedQuery}'`);
         await logger?.logMessage(MessageSenderType.USER, trimmedQuery);
 
+        // Classify intent for subagent routing (if not a slash command)
+        if (!isSlashCommand(trimmedQuery)) {
+          try {
+            // Get API configuration from existing config
+            const contentGeneratorConfig = config.getContentGeneratorConfig();
+            if (contentGeneratorConfig?.baseUrl) {
+              setCurrentSubagent({
+                type: 'analyzer',
+                confidence: 0,
+                status: 'classifying',
+              });
+
+              const classification = await classifyIntent(trimmedQuery, {
+                baseURL: contentGeneratorConfig.baseUrl,
+                model: contentGeneratorConfig.model || 'glm-4',
+                apiKey: contentGeneratorConfig.apiKey,
+              });
+
+              setCurrentSubagent({
+                type: classification.category,
+                confidence: classification.confidence,
+                status: 'active',
+              });
+
+              geminiClient.setCurrentSubagent({
+                type: classification.category,
+                confidence: classification.confidence,
+              });
+            }
+          } catch (error) {
+            // Fallback: continue without subagent classification
+            console.warn(
+              'Intent classification failed, continuing normally:',
+              error,
+            );
+            setCurrentSubagent(null);
+          }
+        }
+
         // Handle UI-only commands first
         const slashCommandResult = isSlashCommand(trimmedQuery)
           ? await handleSlashCommand(trimmedQuery)
@@ -430,6 +465,8 @@ export const useGeminiStream = (
       logger,
       shellModeActive,
       scheduleToolCalls,
+      geminiClient,
+      setCurrentSubagent,
     ],
   );
 
@@ -834,18 +871,6 @@ export const useGeminiStream = (
           return;
         }
 
-        // Handle vision switch requirement
-        const visionSwitchResult = await handleVisionSwitch(
-          queryToSend,
-          userMessageTimestamp,
-          options?.isContinuation || false,
-        );
-
-        if (!visionSwitchResult.shouldProceed) {
-          isSubmittingQueryRef.current = false;
-          return;
-        }
-
         const finalQueryToSend = queryToSend;
 
         if (!options?.isContinuation) {
@@ -882,10 +907,6 @@ export const useGeminiStream = (
           );
 
           if (processingStatus === StreamProcessingStatus.UserCancelled) {
-            // Restore original model if it was temporarily overridden
-            restoreOriginalModel().catch((error) => {
-              console.error('Failed to restore original model:', error);
-            });
             isSubmittingQueryRef.current = false;
             return;
           }
@@ -898,17 +919,7 @@ export const useGeminiStream = (
             loopDetectedRef.current = false;
             handleLoopDetectedEvent();
           }
-
-          // Restore original model if it was temporarily overridden
-          restoreOriginalModel().catch((error) => {
-            console.error('Failed to restore original model:', error);
-          });
         } catch (error: unknown) {
-          // Restore original model if it was temporarily overridden
-          restoreOriginalModel().catch((error) => {
-            console.error('Failed to restore original model:', error);
-          });
-
           if (error instanceof UnauthorizedError) {
             onAuthError('Session expired or is unauthorized.');
           } else if (!isNodeError(error) || error.name !== 'AbortError') {
@@ -947,8 +958,6 @@ export const useGeminiStream = (
       startNewPrompt,
       getPromptCount,
       handleLoopDetectedEvent,
-      handleVisionSwitch,
-      restoreOriginalModel,
     ],
   );
 
@@ -1251,5 +1260,6 @@ export const useGeminiStream = (
     handleApprovalModeChange,
     activePtyId,
     loopDetectionConfirmationRequest,
+    currentSubagent,
   };
 };

@@ -6,11 +6,11 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import type { LoadedSettings, SettingScope } from '../../config/settings.js';
-import type { AuthType, Config } from '@qwen-code/qwen-code-core';
+import type { AuthType, Config } from '@coderloco/coderloco-core';
 import {
   clearCachedCredentialFile,
   getErrorMessage,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 import { AuthState } from '../types.js';
 import { validateAuthMethod } from '../../config/auth.js';
 

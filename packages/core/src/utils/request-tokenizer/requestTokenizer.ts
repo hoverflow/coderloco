@@ -16,18 +16,15 @@ import type {
   TokenCalculationResult,
 } from './types.js';
 import { TextTokenizer } from './textTokenizer.js';
-import { ImageTokenizer } from './imageTokenizer.js';
 
 /**
- * Simple request tokenizer that handles text and image content serially
+ * Simple request tokenizer that handles text content
  */
 export class DefaultRequestTokenizer implements RequestTokenizer {
   private textTokenizer: TextTokenizer;
-  private imageTokenizer: ImageTokenizer;
 
   constructor() {
     this.textTokenizer = new TextTokenizer();
-    this.imageTokenizer = new ImageTokenizer();
   }
 
   /**
@@ -131,15 +128,8 @@ export class DefaultRequestTokenizer implements RequestTokenizer {
   ): Promise<number> {
     if (imageContents.length === 0) return 0;
 
-    try {
-      const tokenCounts =
-        await this.imageTokenizer.calculateTokensBatch(imageContents);
-      return tokenCounts.reduce((sum, count) => sum + count, 0);
-    } catch (error) {
-      console.warn('Error calculating image tokens:', error);
-      // Fallback: minimum tokens per image
-      return imageContents.length * 6; // 4 image tokens + 2 special tokens as minimum
-    }
+    // Image support removed - return fallback value
+    return imageContents.length * 6; // 4 image tokens + 2 special tokens as minimum
   }
 
   /**

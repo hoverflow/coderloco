@@ -8,7 +8,7 @@ import type {
   FileFilteringOptions,
   MCPServerConfig,
   OutputFormat,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 import { extensionsCommand } from '../commands/extensions.js';
 import {
   ApprovalMode,
@@ -24,7 +24,7 @@ import {
   WriteFileTool,
   resolveTelemetrySettings,
   FatalConfigError,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 import type { Settings } from './settings.js';
 import yargs, { type Argv } from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -702,8 +702,6 @@ export async function loadCliConfig(
       ? argv.screenReader
       : (settings.ui?.accessibility?.screenReader ?? false);
 
-  const vlmSwitchMode =
-    argv.vlmSwitchMode || settings.experimental?.vlmSwitchMode;
   return new Config({
     sessionId,
     embeddingModel: DEFAULT_QWEN_EMBEDDING_MODEL,
@@ -792,7 +790,6 @@ export async function loadCliConfig(
     enablePromptCompletion: settings.general?.enablePromptCompletion ?? false,
     skipLoopDetection: settings.model?.skipLoopDetection ?? false,
     skipStartupContext: settings.model?.skipStartupContext ?? false,
-    vlmSwitchMode,
     truncateToolOutputThreshold: settings.tools?.truncateToolOutputThreshold,
     truncateToolOutputLines: settings.tools?.truncateToolOutputLines,
     enableToolOutputTruncation: settings.tools?.enableToolOutputTruncation,

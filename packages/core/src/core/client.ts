@@ -106,9 +106,50 @@ export class GeminiClient {
    */
   private hasFailedCompressionAttempt = false;
 
+  /**
+   * Current subagent classification (if intent classification is enabled)
+   */
+  private currentSubagent: {
+    type: string;
+    confidence: number;
+  } | null = null;
+
+  /**
+   * Callback to notify UI about subagent changes
+   */
+  private _onSubagentChange?: (
+    subagent: { type: string; confidence: number } | null,
+  ) => void;
+
   constructor(private readonly config: Config) {
     this.loopDetector = new LoopDetectionService(config);
     this.lastPromptId = this.config.getSessionId();
+  }
+
+  /**
+   * Set callback for subagent changes
+   */
+  setOnSubagentChange(
+    callback: (subagent: { type: string; confidence: number } | null) => void,
+  ) {
+    this._onSubagentChange = callback;
+  }
+
+  /**
+   * Get current subagent info
+   */
+  getCurrentSubagent() {
+    return this.currentSubagent;
+  }
+
+  /**
+   * Set current subagent (called after classification)
+   */
+  setCurrentSubagent(subagent: { type: string; confidence: number } | null) {
+    this.currentSubagent = subagent;
+    if (this._onSubagentChange) {
+      this._onSubagentChange(subagent);
+    }
   }
 
   async initialize() {

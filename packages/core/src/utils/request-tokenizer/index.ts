@@ -7,7 +7,6 @@
 export { DefaultRequestTokenizer } from './requestTokenizer.js';
 import { DefaultRequestTokenizer } from './requestTokenizer.js';
 export { TextTokenizer } from './textTokenizer.js';
-export { ImageTokenizer } from './imageTokenizer.js';
 
 export type {
   RequestTokenizer,

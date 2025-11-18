@@ -30,12 +30,12 @@ import {
   runExitCleanup,
 } from './utils/cleanup.js';
 import { getCliVersion } from './utils/version.js';
-import type { Config } from '@qwen-code/qwen-code-core';
+import type { Config } from '@coderloco/coderloco-core';
 import {
   AuthType,
   getOauthClient,
   logUserPrompt,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 import {
   initializeApp,
   type InitializationResult,

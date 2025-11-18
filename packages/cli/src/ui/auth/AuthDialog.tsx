@@ -6,7 +6,7 @@
 
 import type React from 'react';
 import { useState } from 'react';
-import { AuthType } from '@qwen-code/qwen-code-core';
+import { AuthType } from '@coderloco/coderloco-core';
 import { Box, Text } from 'ink';
 import { validateAuthMethod } from '../../config/auth.js';
 import { type LoadedSettings, SettingScope } from '../../config/settings.js';
@@ -29,18 +29,6 @@ interface AuthDialogProps {
   initialErrorMessage?: string | null;
 }
 
-function parseDefaultAuthType(
-  defaultAuthType: string | undefined,
-): AuthType | null {
-  if (
-    defaultAuthType &&
-    Object.values(AuthType).includes(defaultAuthType as AuthType)
-  ) {
-    return defaultAuthType as AuthType;
-  }
-  return null;
-}
-
 export function AuthDialog({
   onSelect,
   settings,
@@ -49,33 +37,24 @@ export function AuthDialog({
   const [errorMessage, setErrorMessage] = useState<string | null>(
     initialErrorMessage || null,
   );
-  const [showOpenAIKeyPrompt, setShowOpenAIKeyPrompt] = useState(false);
+
+  // Check if OpenAI env vars are already set
+  const hasOpenAIConfig = Boolean(
+    process.env['OPENAI_API_KEY'] ||
+      process.env['OPENAI_BASE_URL'] ||
+      process.env['OPENAI_MODEL'] ||
+      settings.merged.security?.auth?.apiKey ||
+      settings.merged.security?.auth?.baseUrl ||
+      settings.merged.model?.name,
+  );
+
+  const [showOpenAIKeyPrompt, setShowOpenAIKeyPrompt] =
+    useState(!hasOpenAIConfig);
   const items = [
-    {
-      key: AuthType.QWEN_OAUTH,
-      label: 'Qwen OAuth',
-      value: AuthType.QWEN_OAUTH,
-    },
     { key: AuthType.USE_OPENAI, label: 'OpenAI', value: AuthType.USE_OPENAI },
   ];
 
-  const initialAuthIndex = Math.max(
-    0,
-    items.findIndex((item) => {
-      if (settings.merged.security?.auth?.selectedType) {
-        return item.value === settings.merged.security?.auth?.selectedType;
-      }
-
-      const defaultAuthType = parseDefaultAuthType(
-        process.env['QWEN_DEFAULT_AUTH_TYPE'],
-      );
-      if (defaultAuthType) {
-        return item.value === defaultAuthType;
-      }
-
-      return item.value === AuthType.QWEN_OAUTH;
-    }),
-  );
+  const initialAuthIndex = 0;
 
   const handleAuthSelect = (authMethod: AuthType) => {
     if (authMethod === AuthType.USE_OPENAI) {
@@ -167,7 +146,7 @@ export function AuthDialog({
     >
       <Text bold>Get started</Text>
       <Box marginTop={1}>
-        <Text>How would you like to authenticate for this project?</Text>
+        <Text>Configure your OpenAI-compatible API</Text>
       </Box>
       <Box marginTop={1}>
         <RadioButtonSelect
@@ -182,15 +161,7 @@ export function AuthDialog({
         </Box>
       )}
       <Box marginTop={1}>
-        <Text color={Colors.AccentPurple}>(Use Enter to Set Auth)</Text>
-      </Box>
-      <Box marginTop={1}>
-        <Text>Terms of Services and Privacy Notice for Qwen Code</Text>
-      </Box>
-      <Box marginTop={1}>
-        <Text color={Colors.AccentBlue}>
-          {'https://github.com/QwenLM/Qwen3-Coder/blob/main/README.md'}
-        </Text>
+        <Text color={Colors.AccentPurple}>(Use Enter to Configure)</Text>
       </Box>
     </Box>
   );

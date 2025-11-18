@@ -166,14 +166,12 @@ export function OpenAIKeyPrompt({
       width="100%"
     >
       <Text bold color={Colors.AccentBlue}>
-        OpenAI Configuration Required
+        OpenAI-Compatible API Configuration
       </Text>
       <Box marginTop={1}>
         <Text>
-          Please enter your OpenAI configuration. You can get an API key from{' '}
-          <Text color={Colors.AccentBlue}>
-            https://bailian.console.aliyun.com/?tab=model#/api-key
-          </Text>
+          Configure your OpenAI-compatible API endpoint (local or cloud
+          provider)
         </Text>
       </Box>
       <Box marginTop={1} flexDirection="row">

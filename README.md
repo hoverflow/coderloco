@@ -1,45 +1,34 @@
-# Qwen Code
+# CoderLoco
 
 <div align="center">
 
-![Qwen Code Screenshot](./docs/assets/qwen-screenshot.png)
+![CoderLoco Screenshot](./docs/assets/qwen-screenshot.png)
 
-[![npm version](https://img.shields.io/npm/v/@qwen-code/qwen-code.svg)](https://www.npmjs.com/package/@qwen-code/qwen-code)
-[![License](https://img.shields.io/github/license/QwenLM/qwen-code.svg)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/@coderloco/coderloco.svg)](https://www.npmjs.com/package/@coderloco/coderloco)
+[![License](https://img.shields.io/github/license/coderloco/coderloco.svg)](./LICENSE)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
-[![Downloads](https://img.shields.io/npm/dm/@qwen-code/qwen-code.svg)](https://www.npmjs.com/package/@qwen-code/qwen-code)
+[![Downloads](https://img.shields.io/npm/dm/@coderloco/coderloco.svg)](https://www.npmjs.com/package/@coderloco/coderloco)
 
-**AI-powered command-line workflow tool for developers**
+**A wild, no-frills text-only coding CLI agent that squeezes every bit from your local GPU for truly broke developers**
 
 [Installation](#installation) • [Quick Start](#quick-start) • [Features](#key-features) • [Documentation](./docs/) • [Contributing](./CONTRIBUTING.md)
 
 </div>
 
-<div align="center">
-  
-  <a href="https://qwenlm.github.io/qwen-code-docs/de/">Deutsch</a> | 
-  <a href="https://qwenlm.github.io/qwen-code-docs/fr">français</a> | 
-  <a href="https://qwenlm.github.io/qwen-code-docs/ja/">日本語</a> | 
-  <a href="https://qwenlm.github.io/qwen-code-docs/ru">Русский</a> | 
-  <a href="https://qwenlm.github.io/qwen-code-docs/zh/">中文</a>
-  
-</div>
+CoderLoco is a wild, no-frills text-only coding CLI agent adapted from [**Gemini CLI**](https://github.com/google-gemini/gemini-cli) ([details](./README.gemini.md)), specifically designed to squeeze every bit from your local GPU for truly broke developers. It enhances your development workflow with advanced text-based code understanding, automated tasks, and intelligent assistance without breaking the bank.
 
-Qwen Code is a powerful command-line AI workflow tool adapted from [**Gemini CLI**](https://github.com/google-gemini/gemini-cli) ([details](./README.gemini.md)), specifically optimized for [Qwen3-Coder](https://github.com/QwenLM/Qwen3-Coder) models. It enhances your development workflow with advanced code understanding, automated tasks, and intelligent assistance.
+## 💡 Get Started on the Cheap
 
-## 💡 Free Options Available
+CoderLoco is designed for broke developers who want maximum power without the price tag. Run it locally on your GPU or use these free options:
 
-Get started with Qwen Code at no cost using any of these free options:
+### 🔥 Local GPU Mode (Recommended)
 
-### 🔥 Qwen OAuth (Recommended)
+- **Zero API costs** - run models locally on your GPU
+- **Unlimited requests** - no rate limits when running locally
+- **Complete privacy** - your code never leaves your machine
+- Simply run `loco` with your local model configuration
 
-- **2,000 requests per day** with no token limits
-- **60 requests per minute** rate limit
-- Simply run `qwen` and authenticate with your qwen.ai account
-- Automatic credential management and refresh
-- Use `/auth` command to switch to Qwen OAuth if you have initialized with OpenAI compatible mode
-
-### 🌏 Regional Free Tiers
+### 🌏 Free Cloud Options (When GPU isn't available)
 
 - **Mainland China**: ModelScope offers **2,000 free API calls per day**
 - **International**: OpenRouter provides **up to 1,000 free API calls per day** worldwide
@@ -47,14 +36,15 @@ Get started with Qwen Code at no cost using any of these free options:
 For detailed setup instructions, see [Authorization](#authorization).
 
 > [!WARNING]
-> **Token Usage Notice**: Qwen Code may issue multiple API calls per cycle, resulting in higher token usage (similar to Claude Code). We're actively optimizing API efficiency.
+> **Resource Usage Notice**: CoderLoco may issue multiple API calls per cycle, resulting in higher token usage when using cloud APIs. When running locally on GPU, you're only limited by your hardware!
 
 ## Key Features
 
 - **Code Understanding & Editing** - Query and edit large codebases beyond traditional context window limits
 - **Workflow Automation** - Automate operational tasks like handling pull requests and complex rebases
-- **Enhanced Parser** - Adapted parser specifically optimized for Qwen-Coder models
-- **Vision Model Support** - Automatically detect images in your input and seamlessly switch to vision-capable models for multimodal analysis
+- **Local GPU Optimization** - Squeezes every bit of performance from your local GPU hardware
+- **Budget-Friendly** - Designed specifically for developers who need power without the price tag
+- **Text-First Approach** - Focused on powerful text-based code analysis and generation (vision support may come in future)
 
 ## Installation
 
@@ -69,15 +59,15 @@ curl -qL https://www.npmjs.com/install.sh | sh
 ### Install from npm
 
 ```bash
-npm install -g @qwen-code/qwen-code@latest
-qwen --version
+npm install -g @coderloco/coderloco@latest
+loco --version
 ```
 
 ### Install from source
 
 ```bash
-git clone https://github.com/QwenLM/qwen-code.git
-cd qwen-code
+git clone https://github.com/hoverflow/coderloco.git
+cd coderloco
 npm install
 npm install -g .
 ```
@@ -85,14 +75,14 @@ npm install -g .
 ### Install globally with Homebrew (macOS/Linux)
 
 ```bash
-brew install qwen-code
+brew install coderloco
 ```
 
 ## Quick Start
 
 ```bash
-# Start Qwen Code
-qwen
+# Start CoderLoco
+loco
 
 # Example commands
 > Explain this codebase structure
@@ -106,7 +96,7 @@ Control your token usage with configurable session limits to optimize costs and 
 
 #### Configure Session Token Limit
 
-Create or edit `.qwen/settings.json` in your home directory:
+Create or edit `.loco/settings.json` in your home directory:
 
 ```json
 {
@@ -122,85 +112,32 @@ Create or edit `.qwen/settings.json` in your home directory:
 
 > 📝 **Note**: Session token limit applies to a single conversation, not cumulative API calls.
 
-### Vision Model Configuration
-
-Qwen Code includes intelligent vision model auto-switching that detects images in your input and can automatically switch to vision-capable models for multimodal analysis. **This feature is enabled by default** - when you include images in your queries, you'll see a dialog asking how you'd like to handle the vision model switch.
-
-#### Skip the Switch Dialog (Optional)
-
-If you don't want to see the interactive dialog each time, configure the default behavior in your `.qwen/settings.json`:
-
-```json
-{
-  "experimental": {
-    "vlmSwitchMode": "once"
-  }
-}
-```
-
-**Available modes:**
-
-- **`"once"`** - Switch to vision model for this query only, then revert
-- **`"session"`** - Switch to vision model for the entire session
-- **`"persist"`** - Continue with current model (no switching)
-- **Not set** - Show interactive dialog each time (default)
-
-#### Command Line Override
-
-You can also set the behavior via command line:
-
-```bash
-# Switch once per query
-qwen --vlm-switch-mode once
-
-# Switch for entire session
-qwen --vlm-switch-mode session
-
-# Never switch automatically
-qwen --vlm-switch-mode persist
-```
-
-#### Disable Vision Models (Optional)
-
-To completely disable vision model support, add to your `.qwen/settings.json`:
-
-```json
-{
-  "experimental": {
-    "visionModelPreview": false
-  }
-}
-```
-
-> 💡 **Tip**: In YOLO mode (`--yolo`), vision switching happens automatically without prompts when images are detected.
-
 ### Authorization
 
 Choose your preferred authentication method based on your needs:
 
-#### 1. Qwen OAuth (🚀 Recommended - Start in 30 seconds)
+#### 1. Local GPU Mode (🚀 Recommended - Maximum Power, Zero Cost)
 
-The easiest way to get started - completely free with generous quotas:
+The best way to experience CoderLoco - run models locally on your GPU:
 
 ```bash
-# Just run this command and follow the browser authentication
-qwen
+# Configure your local model and start coding
+loco --local-model path/to/your/model
 ```
 
 **What happens:**
 
-1. **Instant Setup**: CLI opens your browser automatically
-2. **One-Click Login**: Authenticate with your qwen.ai account
-3. **Automatic Management**: Credentials cached locally for future use
-4. **No Configuration**: Zero setup required - just start coding!
+1. **Local Setup**: Configure your preferred local model (Llama, Qwen, etc.)
+2. **GPU Acceleration**: Leverage your GPU for maximum performance
+3. **Complete Privacy**: Your code never leaves your machine
+4. **Unlimited Usage**: No rate limits or token counting when running locally!
 
-**Free Tier Benefits:**
+**Benefits:**
 
-- ✅ **2,000 requests/day** (no token counting needed)
-- ✅ **60 requests/minute** rate limit
-- ✅ **Automatic credential refresh**
-- ✅ **Zero cost** for individual users
-- ℹ️ **Note**: Model fallback may occur to maintain service quality
+- ✅ **Zero API costs** - run entirely on your hardware
+- ✅ **Unlimited requests** - no daily limits
+- ✅ **Complete privacy** - code stays local
+- ✅ **Maximum performance** - optimized for GPU execution
 
 #### 2. OpenAI-Compatible API
 
@@ -282,7 +219,7 @@ export OPENAI_MODEL="qwen/qwen3-coder:free"
 
 ```bash
 cd your-project/
-qwen
+loco
 
 # Architecture analysis
 > Describe the main pieces of this system's architecture
@@ -380,7 +317,7 @@ qwen
 - `/clear` - Clear conversation history
 - `/compress` - Compress history to save tokens
 - `/stats` - Show current session information
-- `/exit` or `/quit` - Exit Qwen Code
+- `/exit` or `/quit` - Exit CoderLoco
 
 ### Keyboard Shortcuts
 
@@ -394,8 +331,8 @@ qwen
 
 | Agent     | Model              | Accuracy |
 | --------- | ------------------ | -------- |
-| Qwen Code | Qwen3-Coder-480A35 | 37.5%    |
-| Qwen Code | Qwen3-Coder-30BA3B | 31.3%    |
+| CoderLoco | Qwen3-Coder-480A35 | 37.5%    |
+| CoderLoco | Qwen3-Coder-30BA3B | 31.3%    |
 
 ## Development & Contributing
 
@@ -409,7 +346,7 @@ If you encounter issues, check the [troubleshooting guide](docs/troubleshooting.
 
 ## Acknowledgments
 
-This project is based on [Google Gemini CLI](https://github.com/google-gemini/gemini-cli). We acknowledge and appreciate the excellent work of the Gemini CLI team. Our main contribution focuses on parser-level adaptations to better support Qwen-Coder models.
+This project is based on [Google Gemini CLI](https://github.com/google-gemini/gemini-cli) and originally forked from [Qwen Code](https://github.com/QwenLM/qwen-code). We acknowledge and appreciate the excellent work of both teams. Our main contribution focuses on making AI-powered development accessible to broke developers with local GPU optimization.
 
 ## License
 
@@ -417,4 +354,4 @@ This project is based on [Google Gemini CLI](https://github.com/google-gemini/ge
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=QwenLM/qwen-code&type=Date)](https://www.star-history.com/#QwenLM/qwen-code&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=hoverflow/coderloco&type=Date)](https://www.star-history.com/#hoverflow/coderloco&Date)

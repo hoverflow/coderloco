@@ -1,15 +1,15 @@
 {
-  "name": "@qwen-code/qwen-code",
+  "name": "@coderloco/coderloco",
   "version": "0.2.2",
-  "description": "Qwen Code",
+  "description": "CoderLoco",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/QwenLM/qwen-code.git"
+    "url": "git+https://github.com/hoverflow/coderloco.git"
   },
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "qwen": "dist/index.js"
+    "loco": "dist/index.js"
   },
   "scripts": {
     "build": "node ../../scripts/build_package.js",
@@ -25,12 +25,12 @@
     "dist"
   ],
   "config": {
-    "sandboxImageUri": "ghcr.io/qwenlm/qwen-code:0.2.2"
+    "sandboxImageUri": "ghcr.io/hoverflow/coderloco:0.2.2"
   },
   "dependencies": {
     "@google/genai": "1.16.0",
     "@iarna/toml": "^2.2.5",
-    "@qwen-code/qwen-code-core": "file:../core",
+    "@coderloco/coderloco-core": "file:../core",
     "@modelcontextprotocol/sdk": "^1.15.1",
     "@types/update-notifier": "^6.0.8",
     "ansi-regex": "^6.2.2",
@@ -85,7 +85,7 @@
     "react-dom": "^19.1.0",
     "typescript": "^5.3.3",
     "vitest": "^3.1.1",
-    "@qwen-code/qwen-code-test-utils": "file:../test-utils"
+    "@coderloco/coderloco-test-utils": "file:../test-utils"
   },
   "engines": {
     "node": ">=20"

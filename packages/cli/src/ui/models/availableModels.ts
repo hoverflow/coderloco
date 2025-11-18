@@ -4,16 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AuthType, DEFAULT_QWEN_MODEL } from '@qwen-code/qwen-code-core';
+import { AuthType, DEFAULT_QWEN_MODEL } from '@coderloco/coderloco-core';
 
 export type AvailableModel = {
   id: string;
   label: string;
   description?: string;
-  isVision?: boolean;
 };
 
-export const MAINLINE_VLM = 'vision-model';
 export const MAINLINE_CODER = DEFAULT_QWEN_MODEL;
 
 export const AVAILABLE_MODELS_QWEN: AvailableModel[] = [
@@ -23,25 +21,13 @@ export const AVAILABLE_MODELS_QWEN: AvailableModel[] = [
     description:
       'The latest Qwen Coder model from Alibaba Cloud ModelStudio (version: qwen3-coder-plus-2025-09-23)',
   },
-  {
-    id: MAINLINE_VLM,
-    label: MAINLINE_VLM,
-    description:
-      'The latest Qwen Vision model from Alibaba Cloud ModelStudio (version: qwen3-vl-plus-2025-09-23)',
-    isVision: true,
-  },
 ];
 
 /**
- * Get available Qwen models filtered by vision model preview setting
+ * Get available Qwen models (text-only)
  */
-export function getFilteredQwenModels(
-  visionModelPreviewEnabled: boolean,
-): AvailableModel[] {
-  if (visionModelPreviewEnabled) {
-    return AVAILABLE_MODELS_QWEN;
-  }
-  return AVAILABLE_MODELS_QWEN.filter((model) => !model.isVision);
+export function getFilteredQwenModels(): AvailableModel[] {
+  return AVAILABLE_MODELS_QWEN;
 }
 
 /**
@@ -68,19 +54,4 @@ export function getAvailableModelsForAuthType(
       // This can be expanded later according to the design doc
       return [];
   }
-}
-
-/**
-/**
- * Hard code the default vision model as a string literal,
- * until our coding model supports multimodal.
- */
-export function getDefaultVisionModel(): string {
-  return MAINLINE_VLM;
-}
-
-export function isVisionModel(modelId: string): boolean {
-  return AVAILABLE_MODELS_QWEN.some(
-    (model) => model.id === modelId && model.isVision,
-  );
 }

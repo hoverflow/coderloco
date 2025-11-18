@@ -12,11 +12,9 @@ import {
   type AuthType,
   type EditorType,
   type ApprovalMode,
-} from '@qwen-code/qwen-code-core';
+} from '@coderloco/coderloco-core';
 import { type SettingScope } from '../../config/settings.js';
 import type { AuthState } from '../types.js';
-import { type VisionSwitchOutcome } from '../components/ModelSwitchDialog.js';
-
 export interface UIActions {
   handleThemeSelect: (
     themeName: string | undefined,
@@ -56,8 +54,6 @@ export interface UIActions {
   onWorkspaceMigrationDialogOpen: () => void;
   onWorkspaceMigrationDialogClose: () => void;
   handleProQuotaChoice: (choice: 'auth' | 'continue') => void;
-  // Vision switch dialog
-  handleVisionSwitchSelect: (outcome: VisionSwitchOutcome) => void;
   // Welcome back dialog
   handleWelcomeBackSelection: (choice: 'continue' | 'restart') => void;
   handleWelcomeBackClose: () => void;

@@ -25,7 +25,8 @@ import type {
   UserTierId,
   IdeInfo,
   FallbackIntent,
-} from '@qwen-code/qwen-code-core';
+  SubagentType,
+} from '@coderloco/coderloco-core';
 import type { DOMElement } from 'ink';
 import type { SessionStatsState } from '../contexts/SessionContext.js';
 import type { ExtensionUpdateState } from '../state/extensions.js';
@@ -134,8 +135,6 @@ export interface UIState {
   extensionsUpdateState: Map<string, ExtensionUpdateState>;
   activePtyId: number | undefined;
   embeddedShellFocused: boolean;
-  // Vision switch dialog
-  isVisionSwitchDialogOpen: boolean;
   // Welcome back dialog
   showWelcomeBackDialog: boolean;
   welcomeBackInfo: {
@@ -146,6 +145,12 @@ export interface UIState {
   // Subagent dialogs
   isSubagentCreateDialogOpen: boolean;
   isAgentsManagerDialogOpen: boolean;
+  // Current subagent classification
+  currentSubagent: {
+    type: SubagentType;
+    confidence: number;
+    status: 'classifying' | 'active' | 'completed';
+  } | null;
 }
 
 export const UIStateContext = createContext<UIState | null>(null);

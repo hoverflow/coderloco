@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ThoughtSummary } from '@qwen-code/qwen-code-core';
+import type { ThoughtSummary } from '@coderloco/coderloco-core';
 import type React from 'react';
 import { Box, Text } from 'ink';
 import { theme } from '../semantic-colors.js';
@@ -20,6 +20,8 @@ interface LoadingIndicatorProps {
   elapsedTime: number;
   rightContent?: React.ReactNode;
   thought?: ThoughtSummary | null;
+  hideWhenSubagentActive?: boolean;
+  hasActiveSubagent?: boolean;
 }
 
 export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
@@ -27,12 +29,19 @@ export const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
   elapsedTime,
   rightContent,
   thought,
+  hideWhenSubagentActive = true,
+  hasActiveSubagent = false,
 }) => {
   const streamingState = useStreamingContext();
   const { columns: terminalWidth } = useTerminalSize();
   const isNarrow = isNarrowWidth(terminalWidth);
 
   if (streamingState === StreamingState.Idle) {
+    return null;
+  }
+
+  // Hide loading indicator when subagent banner is active
+  if (hideWhenSubagentActive && hasActiveSubagent) {
     return null;
   }
 
