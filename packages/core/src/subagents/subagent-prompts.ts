@@ -231,6 +231,11 @@ export interface ExtensibleContext {
   availableTools?: Array<{ name: string; description: string }>;
   projectInfo?: string;
   custom?: string;
+  suggestedFiles?: Array<{
+    path: string;
+    reason: 'filename' | 'content';
+    matchedTerm: string;
+  }>;
 }
 
 /**
@@ -246,6 +251,23 @@ export function buildSubagentPrompt(
   }
 
   let extensibleContext = '';
+
+  // Add suggested files context (from intelligent file suggester)
+  if (context.suggestedFiles && context.suggestedFiles.length > 0) {
+    extensibleContext += '\n## Suggested Relevant Files\n';
+    extensibleContext +=
+      'Based on your query, these files might be relevant:\n';
+    context.suggestedFiles.forEach((file) => {
+      const icon = file.reason === 'filename' ? '📄' : '🔍';
+      const reason =
+        file.reason === 'filename'
+          ? `matches "${file.matchedTerm}"`
+          : `contains "${file.matchedTerm}"`;
+      extensibleContext += `- ${icon} ${file.path} (${reason})\n`;
+    });
+    extensibleContext +=
+      '\nConsider using these files to complete the task efficiently.\n';
+  }
 
   // Add file context
   if (context.files && context.files.length > 0) {

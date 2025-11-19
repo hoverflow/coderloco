@@ -36,8 +36,8 @@ describe('validateAuthMethod', () => {
     );
   });
 
-  it('should return null for QWEN_OAUTH', () => {
-    expect(validateAuthMethod(AuthType.QWEN_OAUTH)).toBeNull();
+  it('should return null for loco_OAUTH', () => {
+    expect(validateAuthMethod(AuthType.loco_OAUTH)).toBeNull();
   });
 
   it('should return an error message for an invalid auth method', () => {

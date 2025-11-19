@@ -9,8 +9,8 @@ import { AuthType } from '../core/contentGenerator.js';
 import {
   isProQuotaExceededError,
   isGenericQuotaExceededError,
-  isQwenQuotaExceededError,
-  isQwenThrottlingError,
+  islocoQuotaExceededError,
+  islocoThrottlingError,
 } from './quotaErrorDetection.js';
 
 export interface HttpError extends Error {
@@ -176,18 +176,18 @@ export async function retryWithBackoff<T>(
         }
       }
 
-      // Check for Qwen OAuth quota exceeded error - throw immediately without retry
-      if (authType === AuthType.QWEN_OAUTH && isQwenQuotaExceededError(error)) {
+      // Check for LOCO OAuth quota exceeded error - throw immediately without retry
+      if (authType === AuthType.loco_OAUTH && islocoQuotaExceededError(error)) {
         throw new Error(
-          `Qwen API quota exceeded: Your Qwen API quota has been exhausted. Please wait for your quota to reset.`,
+          `LOCO API quota exceeded: Your LOCO API quota has been exhausted. Please wait for your quota to reset.`,
         );
       }
 
-      // Track consecutive 429 errors, but handle Qwen throttling differently
+      // Track consecutive 429 errors, but handle LOCO throttling differently
       if (errorStatus === 429) {
-        // For Qwen throttling errors, we still want to track them for exponential backoff
-        // but not for quota fallback logic (since Qwen doesn't have model fallback)
-        if (authType === AuthType.QWEN_OAUTH && isQwenThrottlingError(error)) {
+        // For LOCO throttling errors, we still want to track them for exponential backoff
+        // but not for quota fallback logic (since LOCO doesn't have model fallback)
+        if (authType === AuthType.loco_OAUTH && islocoThrottlingError(error)) {
           // Keep track of 429s but reset the consecutive count to avoid fallback logic
           consecutive429Count = 0;
         } else {

@@ -56,7 +56,7 @@ import {
   logExtensionUninstall,
 } from './loggers.js';
 import * as metrics from './metrics.js';
-import { QwenLogger } from './qwen-logger/qwen-logger.js';
+import { locoLogger } from './loco-logger/loco-logger.js';
 import * as sdk from './sdk.js';
 import { ToolCallDecision } from './tool-call-decision.js';
 import {
@@ -112,10 +112,10 @@ describe('loggers', () => {
   describe('logChatCompression', () => {
     beforeEach(() => {
       vi.spyOn(metrics, 'recordChatCompressionMetrics');
-      vi.spyOn(QwenLogger.prototype, 'logChatCompressionEvent');
+      vi.spyOn(locoLogger.prototype, 'logChatCompressionEvent');
     });
 
-    it('logs the chat compression event to QwenLogger', () => {
+    it('logs the chat compression event to locoLogger', () => {
       const mockConfig = makeFakeConfig();
 
       const event = makeChatCompressionEvent({
@@ -125,7 +125,7 @@ describe('loggers', () => {
 
       logChatCompression(mockConfig, event);
 
-      expect(QwenLogger.prototype.logChatCompressionEvent).toHaveBeenCalledWith(
+      expect(locoLogger.prototype.logChatCompressionEvent).toHaveBeenCalledWith(
         event,
       );
     });
@@ -443,7 +443,7 @@ describe('loggers', () => {
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(QwenLogger.prototype, 'logRipgrepFallbackEvent');
+      vi.spyOn(locoLogger.prototype, 'logRipgrepFallbackEvent');
     });
 
     it('should log ripgrep fallback event', () => {
@@ -451,7 +451,7 @@ describe('loggers', () => {
 
       logRipgrepFallback(mockConfig, event);
 
-      expect(QwenLogger.prototype.logRipgrepFallbackEvent).toHaveBeenCalled();
+      expect(locoLogger.prototype.logRipgrepFallbackEvent).toHaveBeenCalled();
 
       const emittedEvent = mockLogger.emit.mock.calls[0][0];
       expect(emittedEvent.body).toBe('Switching to grep as fallback.');
@@ -470,7 +470,7 @@ describe('loggers', () => {
 
       logRipgrepFallback(mockConfig, event);
 
-      expect(QwenLogger.prototype.logRipgrepFallbackEvent).toHaveBeenCalled();
+      expect(locoLogger.prototype.logRipgrepFallbackEvent).toHaveBeenCalled();
 
       const emittedEvent = mockLogger.emit.mock.calls[0][0];
       expect(emittedEvent.body).toBe('Switching to grep as fallback.');
@@ -1021,7 +1021,7 @@ describe('loggers', () => {
 
   describe('logMalformedJsonResponse', () => {
     beforeEach(() => {
-      vi.spyOn(QwenLogger.prototype, 'logMalformedJsonResponseEvent');
+      vi.spyOn(locoLogger.prototype, 'logMalformedJsonResponseEvent');
     });
 
     it('logs the event to Clearcut and OTEL', () => {
@@ -1031,7 +1031,7 @@ describe('loggers', () => {
       logMalformedJsonResponse(mockConfig, event);
 
       expect(
-        QwenLogger.prototype.logMalformedJsonResponseEvent,
+        locoLogger.prototype.logMalformedJsonResponseEvent,
       ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
@@ -1150,7 +1150,7 @@ describe('loggers', () => {
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(QwenLogger.prototype, 'logExtensionInstallEvent');
+      vi.spyOn(locoLogger.prototype, 'logExtensionInstallEvent');
     });
 
     afterEach(() => {
@@ -1168,7 +1168,7 @@ describe('loggers', () => {
       logExtensionInstallEvent(mockConfig, event);
 
       expect(
-        QwenLogger.prototype.logExtensionInstallEvent,
+        locoLogger.prototype.logExtensionInstallEvent,
       ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
@@ -1194,7 +1194,7 @@ describe('loggers', () => {
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(QwenLogger.prototype, 'logExtensionUninstallEvent');
+      vi.spyOn(locoLogger.prototype, 'logExtensionUninstallEvent');
     });
 
     afterEach(() => {
@@ -1207,7 +1207,7 @@ describe('loggers', () => {
       logExtensionUninstall(mockConfig, event);
 
       expect(
-        QwenLogger.prototype.logExtensionUninstallEvent,
+        locoLogger.prototype.logExtensionUninstallEvent,
       ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({
@@ -1231,7 +1231,7 @@ describe('loggers', () => {
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(QwenLogger.prototype, 'logExtensionEnableEvent');
+      vi.spyOn(locoLogger.prototype, 'logExtensionEnableEvent');
     });
 
     afterEach(() => {
@@ -1243,7 +1243,7 @@ describe('loggers', () => {
 
       logExtensionEnable(mockConfig, event);
 
-      expect(QwenLogger.prototype.logExtensionEnableEvent).toHaveBeenCalledWith(
+      expect(locoLogger.prototype.logExtensionEnableEvent).toHaveBeenCalledWith(
         event,
       );
 
@@ -1268,7 +1268,7 @@ describe('loggers', () => {
     } as unknown as Config;
 
     beforeEach(() => {
-      vi.spyOn(QwenLogger.prototype, 'logExtensionDisableEvent');
+      vi.spyOn(locoLogger.prototype, 'logExtensionDisableEvent');
     });
 
     afterEach(() => {
@@ -1281,7 +1281,7 @@ describe('loggers', () => {
       logExtensionDisable(mockConfig, event);
 
       expect(
-        QwenLogger.prototype.logExtensionDisableEvent,
+        locoLogger.prototype.logExtensionDisableEvent,
       ).toHaveBeenCalledWith(event);
 
       expect(mockLogger.emit).toHaveBeenCalledWith({

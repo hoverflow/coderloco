@@ -37,6 +37,7 @@ import {
   logApiCancel,
   ApiCancelEvent,
   classifyIntent,
+  suggestFiles,
 } from '@coderloco/coderloco-core';
 import { type Part, type PartListUnion, FinishReason } from '@google/genai';
 import type {
@@ -125,6 +126,11 @@ export const useGeminiStream = (
     type: SubagentType;
     confidence: number;
     status: 'classifying' | 'active' | 'completed';
+    suggestedFiles?: Array<{
+      path: string;
+      reason: 'filename' | 'content';
+      matchedTerm: string;
+    }>;
   } | null>(null);
   const { startNewPrompt, getPromptCount } = useSessionStats();
   const storage = config.storage;
@@ -344,21 +350,44 @@ export const useGeminiStream = (
                 status: 'classifying',
               });
 
-              const classification = await classifyIntent(trimmedQuery, {
-                baseURL: contentGeneratorConfig.baseUrl,
-                model: contentGeneratorConfig.model || 'glm-4',
-                apiKey: contentGeneratorConfig.apiKey,
-              });
+              // Run classification and file suggestion in parallel
+              const [classification, fileSuggestions] = await Promise.all([
+                classifyIntent(trimmedQuery, {
+                  baseURL: contentGeneratorConfig.baseUrl,
+                  model: contentGeneratorConfig.model || 'glm-4',
+                  apiKey: contentGeneratorConfig.apiKey,
+                }),
+                suggestFiles(
+                  trimmedQuery,
+                  config.getWorkspaceContext().getDirectories()[0] ||
+                    process.cwd(),
+                  5,
+                ).catch(() => ({
+                  suggestedFiles: [],
+                  extractedTerms: { fileNames: [], codeEntities: [] },
+                })),
+              ]);
+
+              // Prepare suggested files for UI and prompt
+              const suggestedFilesForUI = fileSuggestions.suggestedFiles.map(
+                (f) => ({
+                  path: f.path,
+                  reason: f.reason,
+                  matchedTerm: f.matchedTerm,
+                }),
+              );
 
               setCurrentSubagent({
                 type: classification.category,
                 confidence: classification.confidence,
                 status: 'active',
+                suggestedFiles: suggestedFilesForUI,
               });
 
               geminiClient.setCurrentSubagent({
                 type: classification.category,
                 confidence: classification.confidence,
+                suggestedFiles: suggestedFilesForUI,
               });
             }
           } catch (error) {

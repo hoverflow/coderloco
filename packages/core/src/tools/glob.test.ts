@@ -30,7 +30,7 @@ describe('GlobTool', () => {
     getFileFilteringRespectGitIgnore: () => true,
     getFileFilteringOptions: () => ({
       respectGitIgnore: true,
-      respectQwenIgnore: true,
+      respectlocoIgnore: true,
     }),
     getTargetDir: () => tempRootDir,
     getWorkspaceContext: () => createMockWorkspaceContext(tempRootDir),
@@ -341,13 +341,13 @@ describe('GlobTool', () => {
       expect(result.llmContent).not.toContain('a.ignored.txt');
     });
 
-    it('should respect .qwenignore files by default', async () => {
+    it('should respect .locoignore files by default', async () => {
       await fs.writeFile(
-        path.join(tempRootDir, '.qwenignore'),
-        '*.qwenignored.txt',
+        path.join(tempRootDir, '.locoignore'),
+        '*.locoignored.txt',
       );
       await fs.writeFile(
-        path.join(tempRootDir, 'a.qwenignored.txt'),
+        path.join(tempRootDir, 'a.locoignored.txt'),
         'ignored content',
       );
       await fs.writeFile(
@@ -355,7 +355,7 @@ describe('GlobTool', () => {
         'not ignored content',
       );
 
-      // Recreate the tool to pick up the new .qwenignore file
+      // Recreate the tool to pick up the new .locoignore file
       globTool = new GlobTool(mockConfig);
 
       const params: GlobToolParams = { pattern: '*.txt' };
@@ -363,7 +363,7 @@ describe('GlobTool', () => {
       const result = await invocation.execute(abortSignal);
 
       expect(result.llmContent).toContain('Found 3 file(s)'); // fileA.txt, FileB.TXT, b.notignored.txt
-      expect(result.llmContent).not.toContain('a.qwenignored.txt');
+      expect(result.llmContent).not.toContain('a.locoignored.txt');
     });
   });
 

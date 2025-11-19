@@ -1,21 +1,21 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import type { DeviceAuthorizationInfo } from './useQwenAuth.js';
-import { useQwenAuth } from './useQwenAuth.js';
+import type { DeviceAuthorizationInfo } from './useLocoAuth.js';
+import { useLocoAuth } from './useLocoAuth.js';
 import {
   AuthType,
-  qwenOAuth2Events,
-  QwenOAuth2Event,
+  locoOAuth2Events,
+  locoOAuth2Event,
 } from '@coderloco/coderloco-core';
 import type { LoadedSettings } from '../../config/settings.js';
 
-// Mock the qwenOAuth2Events
+// Mock the locoOAuth2Events
 vi.mock('@coderloco/coderloco-core', async () => {
   const actual = await vi.importActual('@coderloco/coderloco-core');
   const mockEmitter = {
@@ -25,20 +25,20 @@ vi.mock('@coderloco/coderloco-core', async () => {
   };
   return {
     ...actual,
-    qwenOAuth2Events: mockEmitter,
-    QwenOAuth2Event: {
+    locoOAuth2Events: mockEmitter,
+    locoOAuth2Event: {
       AuthUri: 'authUri',
       AuthProgress: 'authProgress',
     },
   };
 });
 
-const mockQwenOAuth2Events = vi.mocked(qwenOAuth2Events);
+const mocklocoOAuth2Events = vi.mocked(locoOAuth2Events);
 
-describe('useQwenAuth', () => {
+describe('useLocoAuth', () => {
   const mockDeviceAuth: DeviceAuthorizationInfo = {
-    verification_uri: 'https://oauth.qwen.com/device',
-    verification_uri_complete: 'https://oauth.qwen.com/device?user_code=ABC123',
+    verification_uri: 'https://oauth.loco.com/device',
+    verification_uri_complete: 'https://oauth.loco.com/device?user_code=ABC123',
     user_code: 'ABC123',
     expires_in: 1800,
   };
@@ -62,60 +62,60 @@ describe('useQwenAuth', () => {
     vi.clearAllMocks();
   });
 
-  it('should initialize with default state when not Qwen auth', () => {
+  it('should initialize with default state when not LOCO auth', () => {
     const settings = createMockSettings(AuthType.USE_GEMINI);
-    const { result } = renderHook(() => useQwenAuth(settings, false));
+    const { result } = renderHook(() => useLocoAuth(settings, false));
 
     expect(result.current).toEqual({
-      isQwenAuthenticating: false,
+      islocoAuthenticating: false,
       deviceAuth: null,
       authStatus: 'idle',
       authMessage: null,
-      isQwenAuth: false,
-      cancelQwenAuth: expect.any(Function),
+      islocoAuth: false,
+      cancellocoAuth: expect.any(Function),
     });
   });
 
-  it('should initialize with default state when Qwen auth but not authenticating', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
-    const { result } = renderHook(() => useQwenAuth(settings, false));
+  it('should initialize with default state when LOCO auth but not authenticating', () => {
+    const settings = createMockSettings(AuthType.loco_OAUTH);
+    const { result } = renderHook(() => useLocoAuth(settings, false));
 
     expect(result.current).toEqual({
-      isQwenAuthenticating: false,
+      islocoAuthenticating: false,
       deviceAuth: null,
       authStatus: 'idle',
       authMessage: null,
-      isQwenAuth: true,
-      cancelQwenAuth: expect.any(Function),
+      islocoAuth: true,
+      cancellocoAuth: expect.any(Function),
     });
   });
 
-  it('should set up event listeners when Qwen auth and authenticating', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
-    renderHook(() => useQwenAuth(settings, true));
+  it('should set up event listeners when LOCO auth and authenticating', () => {
+    const settings = createMockSettings(AuthType.loco_OAUTH);
+    renderHook(() => useLocoAuth(settings, true));
 
-    expect(mockQwenOAuth2Events.on).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthUri,
+    expect(mocklocoOAuth2Events.on).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthUri,
       expect.any(Function),
     );
-    expect(mockQwenOAuth2Events.on).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthProgress,
+    expect(mocklocoOAuth2Events.on).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthProgress,
       expect.any(Function),
     );
   });
 
   it('should handle device auth event', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleDeviceAuth: (deviceAuth: DeviceAuthorizationInfo) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthUri) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthUri) {
         handleDeviceAuth = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
     act(() => {
       handleDeviceAuth!(mockDeviceAuth);
@@ -123,24 +123,24 @@ describe('useQwenAuth', () => {
 
     expect(result.current.deviceAuth).toEqual(mockDeviceAuth);
     expect(result.current.authStatus).toBe('polling');
-    expect(result.current.isQwenAuthenticating).toBe(true);
+    expect(result.current.islocoAuthenticating).toBe(true);
   });
 
   it('should handle auth progress event - success', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleAuthProgress: (
       status: 'success' | 'error' | 'polling' | 'timeout' | 'rate_limit',
       message?: string,
     ) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthProgress) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthProgress) {
         handleAuthProgress = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
     act(() => {
       handleAuthProgress!('success', 'Authentication successful!');
@@ -151,20 +151,20 @@ describe('useQwenAuth', () => {
   });
 
   it('should handle auth progress event - error', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleAuthProgress: (
       status: 'success' | 'error' | 'polling' | 'timeout' | 'rate_limit',
       message?: string,
     ) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthProgress) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthProgress) {
         handleAuthProgress = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
     act(() => {
       handleAuthProgress!('error', 'Authentication failed');
@@ -175,20 +175,20 @@ describe('useQwenAuth', () => {
   });
 
   it('should handle auth progress event - polling', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleAuthProgress: (
       status: 'success' | 'error' | 'polling' | 'timeout' | 'rate_limit',
       message?: string,
     ) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthProgress) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthProgress) {
         handleAuthProgress = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
     act(() => {
       handleAuthProgress!('polling', 'Waiting for user authorization...');
@@ -201,20 +201,20 @@ describe('useQwenAuth', () => {
   });
 
   it('should handle auth progress event - rate_limit', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleAuthProgress: (
       status: 'success' | 'error' | 'polling' | 'timeout' | 'rate_limit',
       message?: string,
     ) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthProgress) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthProgress) {
         handleAuthProgress = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
     act(() => {
       handleAuthProgress!(
@@ -230,20 +230,20 @@ describe('useQwenAuth', () => {
   });
 
   it('should handle auth progress event without message', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleAuthProgress: (
       status: 'success' | 'error' | 'polling' | 'timeout' | 'rate_limit',
       message?: string,
     ) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthProgress) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthProgress) {
         handleAuthProgress = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
     act(() => {
       handleAuthProgress!('success');
@@ -254,78 +254,78 @@ describe('useQwenAuth', () => {
   });
 
   it('should clean up event listeners when auth type changes', () => {
-    const qwenSettings = createMockSettings(AuthType.QWEN_OAUTH);
+    const locoSettings = createMockSettings(AuthType.loco_OAUTH);
     const { rerender } = renderHook(
       ({ settings, isAuthenticating }) =>
-        useQwenAuth(settings, isAuthenticating),
-      { initialProps: { settings: qwenSettings, isAuthenticating: true } },
+        useLocoAuth(settings, isAuthenticating),
+      { initialProps: { settings: locoSettings, isAuthenticating: true } },
     );
 
-    // Change to non-Qwen auth
+    // Change to non-LOCO auth
     const geminiSettings = createMockSettings(AuthType.USE_GEMINI);
     rerender({ settings: geminiSettings, isAuthenticating: true });
 
-    expect(mockQwenOAuth2Events.off).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthUri,
+    expect(mocklocoOAuth2Events.off).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthUri,
       expect.any(Function),
     );
-    expect(mockQwenOAuth2Events.off).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthProgress,
+    expect(mocklocoOAuth2Events.off).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthProgress,
       expect.any(Function),
     );
   });
 
   it('should clean up event listeners when authentication stops', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     const { rerender } = renderHook(
-      ({ isAuthenticating }) => useQwenAuth(settings, isAuthenticating),
+      ({ isAuthenticating }) => useLocoAuth(settings, isAuthenticating),
       { initialProps: { isAuthenticating: true } },
     );
 
     // Stop authentication
     rerender({ isAuthenticating: false });
 
-    expect(mockQwenOAuth2Events.off).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthUri,
+    expect(mocklocoOAuth2Events.off).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthUri,
       expect.any(Function),
     );
-    expect(mockQwenOAuth2Events.off).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthProgress,
+    expect(mocklocoOAuth2Events.off).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthProgress,
       expect.any(Function),
     );
   });
 
   it('should clean up event listeners on unmount', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
-    const { unmount } = renderHook(() => useQwenAuth(settings, true));
+    const settings = createMockSettings(AuthType.loco_OAUTH);
+    const { unmount } = renderHook(() => useLocoAuth(settings, true));
 
     unmount();
 
-    expect(mockQwenOAuth2Events.off).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthUri,
+    expect(mocklocoOAuth2Events.off).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthUri,
       expect.any(Function),
     );
-    expect(mockQwenOAuth2Events.off).toHaveBeenCalledWith(
-      QwenOAuth2Event.AuthProgress,
+    expect(mocklocoOAuth2Events.off).toHaveBeenCalledWith(
+      locoOAuth2Event.AuthProgress,
       expect.any(Function),
     );
   });
 
-  it('should reset state when switching from Qwen auth to another auth type', () => {
-    const qwenSettings = createMockSettings(AuthType.QWEN_OAUTH);
+  it('should reset state when switching from LOCO auth to another auth type', () => {
+    const locoSettings = createMockSettings(AuthType.loco_OAUTH);
     let handleDeviceAuth: (deviceAuth: DeviceAuthorizationInfo) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthUri) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthUri) {
         handleDeviceAuth = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
     const { result, rerender } = renderHook(
       ({ settings, isAuthenticating }) =>
-        useQwenAuth(settings, isAuthenticating),
-      { initialProps: { settings: qwenSettings, isAuthenticating: true } },
+        useLocoAuth(settings, isAuthenticating),
+      { initialProps: { settings: locoSettings, isAuthenticating: true } },
     );
 
     // Simulate device auth
@@ -340,25 +340,25 @@ describe('useQwenAuth', () => {
     const geminiSettings = createMockSettings(AuthType.USE_GEMINI);
     rerender({ settings: geminiSettings, isAuthenticating: true });
 
-    expect(result.current.isQwenAuthenticating).toBe(false);
+    expect(result.current.islocoAuthenticating).toBe(false);
     expect(result.current.deviceAuth).toBe(null);
     expect(result.current.authStatus).toBe('idle');
     expect(result.current.authMessage).toBe(null);
   });
 
   it('should reset state when authentication stops', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleDeviceAuth: (deviceAuth: DeviceAuthorizationInfo) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthUri) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthUri) {
         handleDeviceAuth = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
     const { result, rerender } = renderHook(
-      ({ isAuthenticating }) => useQwenAuth(settings, isAuthenticating),
+      ({ isAuthenticating }) => useLocoAuth(settings, isAuthenticating),
       { initialProps: { isAuthenticating: true } },
     );
 
@@ -373,24 +373,24 @@ describe('useQwenAuth', () => {
     // Stop authentication
     rerender({ isAuthenticating: false });
 
-    expect(result.current.isQwenAuthenticating).toBe(false);
+    expect(result.current.islocoAuthenticating).toBe(false);
     expect(result.current.deviceAuth).toBe(null);
     expect(result.current.authStatus).toBe('idle');
     expect(result.current.authMessage).toBe(null);
   });
 
-  it('should handle cancelQwenAuth function', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
+  it('should handle cancellocoAuth function', () => {
+    const settings = createMockSettings(AuthType.loco_OAUTH);
     let handleDeviceAuth: (deviceAuth: DeviceAuthorizationInfo) => void;
 
-    mockQwenOAuth2Events.on.mockImplementation((event, handler) => {
-      if (event === QwenOAuth2Event.AuthUri) {
+    mocklocoOAuth2Events.on.mockImplementation((event, handler) => {
+      if (event === locoOAuth2Event.AuthUri) {
         handleDeviceAuth = handler;
       }
-      return mockQwenOAuth2Events;
+      return mocklocoOAuth2Events;
     });
 
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
     // Set up some state
     act(() => {
@@ -401,42 +401,42 @@ describe('useQwenAuth', () => {
 
     // Cancel auth
     act(() => {
-      result.current.cancelQwenAuth();
+      result.current.cancellocoAuth();
     });
 
-    expect(result.current.isQwenAuthenticating).toBe(false);
+    expect(result.current.islocoAuthenticating).toBe(false);
     expect(result.current.deviceAuth).toBe(null);
     expect(result.current.authStatus).toBe('idle');
     expect(result.current.authMessage).toBe(null);
   });
 
-  it('should maintain isQwenAuth flag correctly', () => {
-    // Test with Qwen OAuth
-    const qwenSettings = createMockSettings(AuthType.QWEN_OAUTH);
-    const { result: qwenResult } = renderHook(() =>
-      useQwenAuth(qwenSettings, false),
+  it('should maintain islocoAuth flag correctly', () => {
+    // Test with LOCO OAuth
+    const locoSettings = createMockSettings(AuthType.loco_OAUTH);
+    const { result: locoResult } = renderHook(() =>
+      useLocoAuth(locoSettings, false),
     );
-    expect(qwenResult.current.isQwenAuth).toBe(true);
+    expect(locoResult.current.islocoAuth).toBe(true);
 
     // Test with other auth types
     const geminiSettings = createMockSettings(AuthType.USE_GEMINI);
     const { result: geminiResult } = renderHook(() =>
-      useQwenAuth(geminiSettings, false),
+      useLocoAuth(geminiSettings, false),
     );
-    expect(geminiResult.current.isQwenAuth).toBe(false);
+    expect(geminiResult.current.islocoAuth).toBe(false);
 
     const oauthSettings = createMockSettings(AuthType.LOGIN_WITH_GOOGLE);
     const { result: oauthResult } = renderHook(() =>
-      useQwenAuth(oauthSettings, false),
+      useLocoAuth(oauthSettings, false),
     );
-    expect(oauthResult.current.isQwenAuth).toBe(false);
+    expect(oauthResult.current.islocoAuth).toBe(false);
   });
 
-  it('should set isQwenAuthenticating to true when starting authentication with Qwen auth', () => {
-    const settings = createMockSettings(AuthType.QWEN_OAUTH);
-    const { result } = renderHook(() => useQwenAuth(settings, true));
+  it('should set islocoAuthenticating to true when starting authentication with LOCO auth', () => {
+    const settings = createMockSettings(AuthType.loco_OAUTH);
+    const { result } = renderHook(() => useLocoAuth(settings, true));
 
-    expect(result.current.isQwenAuthenticating).toBe(true);
+    expect(result.current.islocoAuthenticating).toBe(true);
     expect(result.current.authStatus).toBe('idle');
   });
 });

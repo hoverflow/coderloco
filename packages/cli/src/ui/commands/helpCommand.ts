@@ -12,7 +12,7 @@ export const helpCommand: SlashCommand = {
   name: 'help',
   altNames: ['?'],
   kind: CommandKind.BUILT_IN,
-  description: 'for help on Qwen Code',
+  description: 'for help on LOCO Code',
   action: async (context) => {
     const helpItem: Omit<HistoryItemHelp, 'id'> = {
       type: MessageType.HELP,

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -242,8 +242,8 @@ export function CreationSummary({
           <Text color={theme.text.primary}>Location: </Text>
           <Text>
             {state.location === 'project'
-              ? 'Project Level (.qwen/agents/)'
-              : 'User Level (~/.qwen/agents/)'}
+              ? 'Project Level (.loco/agents/)'
+              : 'User Level (~/.loco/agents/)'}
           </Text>
         </Box>
 

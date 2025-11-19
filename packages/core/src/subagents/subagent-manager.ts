@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -31,7 +31,7 @@ import type { Config } from '../config/config.js';
 import { BuiltinAgentRegistry } from './builtin-agents.js';
 import { ToolDisplayNamesMigration } from '../tools/tool-names.js';
 
-const QWEN_CONFIG_DIR = '.qwen';
+const loco_CONFIG_DIR = '.loco';
 const AGENT_CONFIG_DIR = 'agents';
 
 /**
@@ -697,10 +697,10 @@ export class SubagentManager {
       level === 'project'
         ? path.join(
             this.config.getProjectRoot(),
-            QWEN_CONFIG_DIR,
+            loco_CONFIG_DIR,
             AGENT_CONFIG_DIR,
           )
-        : path.join(os.homedir(), QWEN_CONFIG_DIR, AGENT_CONFIG_DIR);
+        : path.join(os.homedir(), loco_CONFIG_DIR, AGENT_CONFIG_DIR);
 
     return path.join(baseDir, `${name}.md`);
   }
@@ -731,7 +731,7 @@ export class SubagentManager {
     }
 
     let baseDir = level === 'project' ? projectRoot : homeDir;
-    baseDir = path.join(baseDir, QWEN_CONFIG_DIR, AGENT_CONFIG_DIR);
+    baseDir = path.join(baseDir, loco_CONFIG_DIR, AGENT_CONFIG_DIR);
 
     try {
       const files = await fs.readdir(baseDir);

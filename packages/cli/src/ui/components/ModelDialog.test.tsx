@@ -12,7 +12,7 @@ import { DescriptiveRadioButtonSelect } from './shared/DescriptiveRadioButtonSel
 import { ConfigContext } from '../contexts/ConfigContext.js';
 import type { Config } from '@coderloco/coderloco-core';
 import {
-  AVAILABLE_MODELS_QWEN,
+  AVAILABLE_MODELS_loco,
   MAINLINE_CODER,
 } from '../models/availableModels.js';
 
@@ -40,7 +40,7 @@ const renderComponent = (
         // --- Functions used by ModelDialog ---
         getModel: vi.fn(() => MAINLINE_CODER),
         setModel: vi.fn(),
-        getAuthType: vi.fn(() => 'qwen-oauth'),
+        getAuthType: vi.fn(() => 'loco-oauth'),
 
         // --- Functions used by ClearcutLogger ---
         getUsageStatisticsEnabled: vi.fn(() => true),
@@ -89,7 +89,7 @@ describe('<ModelDialog />', () => {
     expect(mockedSelect).toHaveBeenCalledTimes(1);
 
     const props = mockedSelect.mock.calls[0][0];
-    expect(props.items).toHaveLength(AVAILABLE_MODELS_QWEN.length);
+    expect(props.items).toHaveLength(AVAILABLE_MODELS_loco.length);
     expect(props.items[0].value).toBe(MAINLINE_CODER);
     expect(props.showNumbers).toBe(true);
   });
@@ -190,7 +190,7 @@ describe('<ModelDialog />', () => {
 
   it('updates initialIndex when config context changes', () => {
     const mockGetModel = vi.fn(() => MAINLINE_CODER);
-    const mockGetAuthType = vi.fn(() => 'qwen-oauth');
+    const mockGetAuthType = vi.fn(() => 'loco-oauth');
     const { rerender } = render(
       <ConfigContext.Provider
         value={

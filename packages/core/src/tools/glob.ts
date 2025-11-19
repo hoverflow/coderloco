@@ -213,9 +213,9 @@ class GlobToolInvocation extends BaseToolInvocation<
       respectGitIgnore:
         options?.respectGitIgnore ??
         DEFAULT_FILE_FILTERING_OPTIONS.respectGitIgnore,
-      respectQwenIgnore:
-        options?.respectQwenIgnore ??
-        DEFAULT_FILE_FILTERING_OPTIONS.respectQwenIgnore,
+      respectlocoIgnore:
+        options?.respectlocoIgnore ??
+        DEFAULT_FILE_FILTERING_OPTIONS.respectlocoIgnore,
     };
   }
 }

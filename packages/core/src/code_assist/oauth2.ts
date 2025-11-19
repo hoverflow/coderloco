@@ -503,22 +503,22 @@ export async function clearCachedCredentialFile() {
     clearOauthClientCache();
 
     /**
-     * Also clear Qwen SharedTokenManager cache and credentials file to prevent stale credentials
+     * Also clear LOCO SharedTokenManager cache and credentials file to prevent stale credentials
      * when switching between auth types
      * TODO: We do not depend on code_assist, we'll have to build an independent auth-cleaning procedure.
      */
     try {
       const { SharedTokenManager } = await import(
-        '../qwen/sharedTokenManager.js'
+        '../loco/sharedTokenManager.js'
       );
-      const { clearQwenCredentials } = await import('../qwen/qwenOAuth2.js');
+      const { clearlocoCredentials } = await import('../loco/locoOAuth2.js');
 
       const sharedManager = SharedTokenManager.getInstance();
       sharedManager.clearCache();
 
-      await clearQwenCredentials();
-    } catch (qwenError) {
-      console.debug('Could not clear Qwen credentials:', qwenError);
+      await clearlocoCredentials();
+    } catch (locoError) {
+      console.debug('Could not clear LOCO credentials:', locoError);
     }
   } catch (e) {
     console.error('Failed to clear cached credentials:', e);

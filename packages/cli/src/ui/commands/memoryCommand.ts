@@ -7,7 +7,7 @@
 import {
   getErrorMessage,
   loadServerHierarchicalMemory,
-  QWEN_DIR,
+  loco_DIR,
 } from '@coderloco/coderloco-core';
 import path from 'node:path';
 import os from 'os';
@@ -49,7 +49,7 @@ export const memoryCommand: SlashCommand = {
           kind: CommandKind.BUILT_IN,
           action: async (context) => {
             try {
-              const projectMemoryPath = path.join(process.cwd(), 'QWEN.md');
+              const projectMemoryPath = path.join(process.cwd(), 'LOCO.md');
               const memoryContent = await fs.readFile(
                 projectMemoryPath,
                 'utf-8',
@@ -86,8 +86,8 @@ export const memoryCommand: SlashCommand = {
             try {
               const globalMemoryPath = path.join(
                 os.homedir(),
-                QWEN_DIR,
-                'QWEN.md',
+                loco_DIR,
+                'LOCO.md',
               );
               const globalMemoryContent = await fs.readFile(
                 globalMemoryPath,

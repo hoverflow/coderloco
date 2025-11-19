@@ -101,6 +101,11 @@ interface SubagentBannerProps {
   userRequest: string;
   status?: 'classifying' | 'activating' | 'working' | 'completed';
   elapsedTime?: number;
+  suggestedFiles?: Array<{
+    path: string;
+    reason: 'filename' | 'content';
+    matchedTerm: string;
+  }>;
 }
 
 export const SubagentBanner: React.FC<SubagentBannerProps> = ({
@@ -109,6 +114,7 @@ export const SubagentBanner: React.FC<SubagentBannerProps> = ({
   status = 'working',
   elapsedTime = 0,
   userRequest: _userRequest,
+  suggestedFiles = [],
 }) => {
   const agent = SUBAGENT_INFO[agentType];
   const [dots, setDots] = useState('');
@@ -157,9 +163,31 @@ export const SubagentBanner: React.FC<SubagentBannerProps> = ({
         <Text color="gray"> {(confidence * 100).toFixed(0)}% confidence</Text>
       </Box>
 
+      {/* Display suggested files if available */}
+      {suggestedFiles.length > 0 && (
+        <Box flexDirection="column" marginLeft={2} marginTop={1}>
+          <Text color="yellow" dimColor>
+            💡 Suggested files ({suggestedFiles.length}):
+          </Text>
+          {suggestedFiles.slice(0, 5).map((file, idx) => {
+            const icon = file.reason === 'filename' ? '📄' : '🔍';
+            // Get relative path or basename if path is too long
+            const displayPath =
+              file.path.length > 60 ? '...' + file.path.slice(-57) : file.path;
+            return (
+              <Box key={idx} marginLeft={2}>
+                <Text color="gray" dimColor>
+                  {icon} {displayPath}
+                </Text>
+              </Box>
+            );
+          })}
+        </Box>
+      )}
+
       {/* Status indicator with spinner and timer */}
       {status === 'working' && (
-        <Box>
+        <Box marginTop={suggestedFiles.length > 0 ? 1 : 0}>
           <Text color={agent.color}>{agent.emoji}</Text>
           <Text color="white">
             {' '}

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -8,8 +8,8 @@ import { useState, useCallback, useEffect } from 'react';
 import type { LoadedSettings } from '../../config/settings.js';
 import {
   AuthType,
-  qwenOAuth2Events,
-  QwenOAuth2Event,
+  locoOAuth2Events,
+  locoOAuth2Event,
 } from '@coderloco/coderloco-core';
 
 export interface DeviceAuthorizationInfo {
@@ -19,8 +19,8 @@ export interface DeviceAuthorizationInfo {
   expires_in: number;
 }
 
-interface QwenAuthState {
-  isQwenAuthenticating: boolean;
+interface locoAuthState {
+  islocoAuthenticating: boolean;
   deviceAuth: DeviceAuthorizationInfo | null;
   authStatus:
     | 'idle'
@@ -32,26 +32,26 @@ interface QwenAuthState {
   authMessage: string | null;
 }
 
-export const useQwenAuth = (
+export const useLocoAuth = (
   settings: LoadedSettings,
   isAuthenticating: boolean,
 ) => {
-  const [qwenAuthState, setQwenAuthState] = useState<QwenAuthState>({
-    isQwenAuthenticating: false,
+  const [locoAuthState, setlocoAuthState] = useState<locoAuthState>({
+    islocoAuthenticating: false,
     deviceAuth: null,
     authStatus: 'idle',
     authMessage: null,
   });
 
-  const isQwenAuth =
-    settings.merged.security?.auth?.selectedType === AuthType.QWEN_OAUTH;
+  const islocoAuth =
+    settings.merged.security?.auth?.selectedType === AuthType.loco_OAUTH;
 
   // Set up event listeners when authentication starts
   useEffect(() => {
-    if (!isQwenAuth || !isAuthenticating) {
-      // Reset state when not authenticating or not Qwen auth
-      setQwenAuthState({
-        isQwenAuthenticating: false,
+    if (!islocoAuth || !isAuthenticating) {
+      // Reset state when not authenticating or not LOCO auth
+      setlocoAuthState({
+        islocoAuthenticating: false,
         deviceAuth: null,
         authStatus: 'idle',
         authMessage: null,
@@ -59,15 +59,15 @@ export const useQwenAuth = (
       return;
     }
 
-    setQwenAuthState((prev) => ({
+    setlocoAuthState((prev) => ({
       ...prev,
-      isQwenAuthenticating: true,
+      islocoAuthenticating: true,
       authStatus: 'idle',
     }));
 
     // Set up event listeners
     const handleDeviceAuth = (deviceAuth: DeviceAuthorizationInfo) => {
-      setQwenAuthState((prev) => ({
+      setlocoAuthState((prev) => ({
         ...prev,
         deviceAuth: {
           verification_uri: deviceAuth.verification_uri,
@@ -83,7 +83,7 @@ export const useQwenAuth = (
       status: 'success' | 'error' | 'polling' | 'timeout' | 'rate_limit',
       message?: string,
     ) => {
-      setQwenAuthState((prev) => ({
+      setlocoAuthState((prev) => ({
         ...prev,
         authStatus: status,
         authMessage: message || null,
@@ -91,22 +91,22 @@ export const useQwenAuth = (
     };
 
     // Add event listeners
-    qwenOAuth2Events.on(QwenOAuth2Event.AuthUri, handleDeviceAuth);
-    qwenOAuth2Events.on(QwenOAuth2Event.AuthProgress, handleAuthProgress);
+    locoOAuth2Events.on(locoOAuth2Event.AuthUri, handleDeviceAuth);
+    locoOAuth2Events.on(locoOAuth2Event.AuthProgress, handleAuthProgress);
 
     // Cleanup event listeners when component unmounts or auth finishes
     return () => {
-      qwenOAuth2Events.off(QwenOAuth2Event.AuthUri, handleDeviceAuth);
-      qwenOAuth2Events.off(QwenOAuth2Event.AuthProgress, handleAuthProgress);
+      locoOAuth2Events.off(locoOAuth2Event.AuthUri, handleDeviceAuth);
+      locoOAuth2Events.off(locoOAuth2Event.AuthProgress, handleAuthProgress);
     };
-  }, [isQwenAuth, isAuthenticating]);
+  }, [islocoAuth, isAuthenticating]);
 
-  const cancelQwenAuth = useCallback(() => {
+  const cancellocoAuth = useCallback(() => {
     // Emit cancel event to stop polling
-    qwenOAuth2Events.emit(QwenOAuth2Event.AuthCancel);
+    locoOAuth2Events.emit(locoOAuth2Event.AuthCancel);
 
-    setQwenAuthState({
-      isQwenAuthenticating: false,
+    setlocoAuthState({
+      islocoAuthenticating: false,
       deviceAuth: null,
       authStatus: 'idle',
       authMessage: null,
@@ -114,8 +114,8 @@ export const useQwenAuth = (
   }, []);
 
   return {
-    ...qwenAuthState,
-    isQwenAuth,
-    cancelQwenAuth,
+    ...locoAuthState,
+    islocoAuth,
+    cancellocoAuth,
   };
 };

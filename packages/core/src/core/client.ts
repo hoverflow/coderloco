@@ -30,6 +30,7 @@ import {
   getPlanModeSystemReminder,
   getSubagentSystemReminder,
 } from './prompts.js';
+import { buildSubagentPrompt } from '../subagents/subagent-prompts.js';
 import {
   CompressionStatus,
   GeminiEventType,
@@ -112,13 +113,26 @@ export class GeminiClient {
   private currentSubagent: {
     type: string;
     confidence: number;
+    suggestedFiles?: Array<{
+      path: string;
+      reason: 'filename' | 'content';
+      matchedTerm: string;
+    }>;
   } | null = null;
 
   /**
    * Callback to notify UI about subagent changes
    */
   private _onSubagentChange?: (
-    subagent: { type: string; confidence: number } | null,
+    subagent: {
+      type: string;
+      confidence: number;
+      suggestedFiles?: Array<{
+        path: string;
+        reason: 'filename' | 'content';
+        matchedTerm: string;
+      }>;
+    } | null,
   ) => void;
 
   constructor(private readonly config: Config) {
@@ -130,7 +144,17 @@ export class GeminiClient {
    * Set callback for subagent changes
    */
   setOnSubagentChange(
-    callback: (subagent: { type: string; confidence: number } | null) => void,
+    callback: (
+      subagent: {
+        type: string;
+        confidence: number;
+        suggestedFiles?: Array<{
+          path: string;
+          reason: 'filename' | 'content';
+          matchedTerm: string;
+        }>;
+      } | null,
+    ) => void,
   ) {
     this._onSubagentChange = callback;
   }
@@ -145,7 +169,17 @@ export class GeminiClient {
   /**
    * Set current subagent (called after classification)
    */
-  setCurrentSubagent(subagent: { type: string; confidence: number } | null) {
+  setCurrentSubagent(
+    subagent: {
+      type: string;
+      confidence: number;
+      suggestedFiles?: Array<{
+        path: string;
+        reason: 'filename' | 'content';
+        matchedTerm: string;
+      }>;
+    } | null,
+  ) {
     this.currentSubagent = subagent;
     if (this._onSubagentChange) {
       this._onSubagentChange(subagent);
@@ -234,7 +268,16 @@ export class GeminiClient {
     try {
       const userMemory = this.config.getUserMemory();
       const model = this.config.getModel();
-      const systemInstruction = getCoreSystemPrompt(userMemory, model);
+      let systemInstruction = getCoreSystemPrompt(userMemory, model);
+
+      // If a subagent is active, append the subagent-specific prompt with suggested files
+      if (this.currentSubagent) {
+        const subagentPrompt = buildSubagentPrompt(this.currentSubagent.type, {
+          suggestedFiles: this.currentSubagent.suggestedFiles,
+        });
+        // Append the subagent prompt to the base system prompt
+        systemInstruction = `${systemInstruction}\n\n${subagentPrompt}`;
+      }
 
       const config: GenerateContentConfig = { ...this.generateContentConfig };
 
@@ -513,7 +556,7 @@ export class GeminiClient {
     }
 
     // Prevent context updates from being sent while a tool call is
-    // waiting for a response. The Qwen API requires that a functionResponse
+    // waiting for a response. The LOCO API requires that a functionResponse
     // part from the user immediately follows a functionCall part from the model
     // in the conversation history . The IDE context is not discarded; it will
     // be included in the next regular message sent to the model.

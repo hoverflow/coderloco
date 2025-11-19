@@ -1,10 +1,10 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AuthType, DEFAULT_QWEN_MODEL } from '@coderloco/coderloco-core';
+import { AuthType, DEFAULT_loco_MODEL } from '@coderloco/coderloco-core';
 
 export type AvailableModel = {
   id: string;
@@ -12,22 +12,22 @@ export type AvailableModel = {
   description?: string;
 };
 
-export const MAINLINE_CODER = DEFAULT_QWEN_MODEL;
+export const MAINLINE_CODER = DEFAULT_loco_MODEL;
 
-export const AVAILABLE_MODELS_QWEN: AvailableModel[] = [
+export const AVAILABLE_MODELS_loco: AvailableModel[] = [
   {
     id: MAINLINE_CODER,
     label: MAINLINE_CODER,
     description:
-      'The latest Qwen Coder model from Alibaba Cloud ModelStudio (version: qwen3-coder-plus-2025-09-23)',
+      'The latest LOCO Coder model from Alibaba Cloud ModelStudio (version: loco3-coder-plus-2025-09-23)',
   },
 ];
 
 /**
- * Get available Qwen models (text-only)
+ * Get available LOCO models (text-only)
  */
-export function getFilteredQwenModels(): AvailableModel[] {
-  return AVAILABLE_MODELS_QWEN;
+export function getFilteredlocoModels(): AvailableModel[] {
+  return AVAILABLE_MODELS_loco;
 }
 
 /**
@@ -43,8 +43,8 @@ export function getAvailableModelsForAuthType(
   authType: AuthType,
 ): AvailableModel[] {
   switch (authType) {
-    case AuthType.QWEN_OAUTH:
-      return AVAILABLE_MODELS_QWEN;
+    case AuthType.loco_OAUTH:
+      return AVAILABLE_MODELS_loco;
     case AuthType.USE_OPENAI: {
       const openAIModel = getOpenAIAvailableModelFromEnv();
       return openAIModel ? [openAIModel] : [];

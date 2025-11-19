@@ -36,6 +36,7 @@ export const DefaultAppLayout: React.FC<{ width?: string }> = ({
                 : 'completed'
           }
           elapsedTime={uiState.elapsedTime}
+          suggestedFiles={uiState.currentSubagent.suggestedFiles}
         />
       )}
 

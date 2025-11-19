@@ -28,9 +28,9 @@ export const Tips: React.FC<TipsProps> = ({ config }) => {
         <Text color={theme.text.primary}>
           3. Create{' '}
           <Text bold color={theme.text.accent}>
-            QWEN.md
+            LOCO.md
           </Text>{' '}
-          files to customize your interactions with Qwen Code.
+          files to customize your interactions with LOCO Code.
         </Text>
       )}
       <Text color={theme.text.primary}>

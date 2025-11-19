@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -10,13 +10,13 @@ import type { WizardStepProps } from '../types.js';
 
 interface GenerationOption {
   label: string;
-  value: 'qwen' | 'manual';
+  value: 'loco' | 'manual';
 }
 
 const generationOptions: GenerationOption[] = [
   {
-    label: 'Generate with Qwen Code (Recommended)',
-    value: 'qwen',
+    label: 'Generate with LOCO Code (Recommended)',
+    value: 'loco',
   },
   {
     label: 'Manual Creation',
@@ -34,7 +34,7 @@ export function GenerationMethodSelector({
   onPrevious: _onPrevious,
 }: WizardStepProps) {
   const handleSelect = (selectedValue: string) => {
-    const method = selectedValue as 'qwen' | 'manual';
+    const method = selectedValue as 'loco' | 'manual';
     dispatch({ type: 'SET_GENERATION_METHOD', method });
     onNext();
   };

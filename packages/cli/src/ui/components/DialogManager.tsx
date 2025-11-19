@@ -13,7 +13,7 @@ import { ConsentPrompt } from './ConsentPrompt.js';
 import { ThemeDialog } from './ThemeDialog.js';
 import { SettingsDialog } from './SettingsDialog.js';
 import { AuthInProgress } from '../auth/AuthInProgress.js';
-import { QwenOAuthProgress } from './QwenOAuthProgress.js';
+import { LocoOAuthProgress } from './LocoOAuthProgress.js';
 import { AuthDialog } from '../auth/AuthDialog.js';
 import { EditorSettingsDialog } from './EditorSettingsDialog.js';
 import { WorkspaceMigrationDialog } from './WorkspaceMigrationDialog.js';
@@ -204,15 +204,15 @@ export const DialogManager = ({
     return <ModelDialog onClose={uiActions.closeModelDialog} />;
   }
   if (uiState.isAuthenticating) {
-    // Show Qwen OAuth progress if it's Qwen auth and OAuth is active
-    if (uiState.isQwenAuth && uiState.isQwenAuthenticating) {
+    // Show LOCO OAuth progress if it's LOCO auth and OAuth is active
+    if (uiState.islocoAuth && uiState.islocoAuthenticating) {
       return (
-        <QwenOAuthProgress
+        <LocoOAuthProgress
           deviceAuth={uiState.deviceAuth || undefined}
           authStatus={uiState.authStatus}
           authMessage={uiState.authMessage}
-          onTimeout={uiActions.handleQwenAuthTimeout}
-          onCancel={uiActions.handleQwenAuthCancel}
+          onTimeout={uiActions.handlelocoAuthTimeout}
+          onCancel={uiActions.handlelocoAuthCancel}
         />
       );
     }

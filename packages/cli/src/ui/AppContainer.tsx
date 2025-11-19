@@ -48,7 +48,7 @@ import { useHistory } from './hooks/useHistoryManager.js';
 import { useMemoryMonitor } from './hooks/useMemoryMonitor.js';
 import { useThemeCommand } from './hooks/useThemeCommand.js';
 import { useAuthCommand } from './auth/useAuth.js';
-import { useQwenAuth } from './hooks/useQwenAuth.js';
+import { useLocoAuth } from './hooks/useLocoAuth.js';
 import { useQuotaAndFallback } from './hooks/useQuotaAndFallback.js';
 import { useEditorSettings } from './hooks/useEditorSettings.js';
 import { useSettingsCommand } from './hooks/useSettingsCommand.js';
@@ -351,15 +351,15 @@ export const AppContainer = (props: AppContainerProps) => {
     openAuthDialog,
   } = useAuthCommand(settings, config);
 
-  // Qwen OAuth authentication state
+  // LOCO OAuth authentication state
   const {
-    isQwenAuth,
-    isQwenAuthenticating,
+    islocoAuth,
+    islocoAuthenticating,
     deviceAuth,
     authStatus,
     authMessage,
-    cancelQwenAuth,
-  } = useQwenAuth(settings, isAuthenticating);
+    cancellocoAuth,
+  } = useLocoAuth(settings, isAuthenticating);
 
   const { proQuotaRequest, handleProQuotaChoice } = useQuotaAndFallback({
     config,
@@ -369,19 +369,19 @@ export const AppContainer = (props: AppContainerProps) => {
     setModelSwitchedFromQuotaError,
   });
 
-  // Handle Qwen OAuth timeout
-  const handleQwenAuthTimeout = useCallback(() => {
-    onAuthError('Qwen OAuth authentication timed out. Please try again.');
-    cancelQwenAuth();
+  // Handle LOCO OAuth timeout
+  const handlelocoAuthTimeout = useCallback(() => {
+    onAuthError('LOCO OAuth authentication timed out. Please try again.');
+    cancellocoAuth();
     setAuthState(AuthState.Updating);
-  }, [onAuthError, cancelQwenAuth, setAuthState]);
+  }, [onAuthError, cancellocoAuth, setAuthState]);
 
-  // Handle Qwen OAuth cancel
-  const handleQwenAuthCancel = useCallback(() => {
-    onAuthError('Qwen OAuth authentication cancelled.');
-    cancelQwenAuth();
+  // Handle LOCO OAuth cancel
+  const handlelocoAuthCancel = useCallback(() => {
+    onAuthError('LOCO OAuth authentication cancelled.');
+    cancellocoAuth();
     setAuthState(AuthState.Updating);
-  }, [onAuthError, cancelQwenAuth, setAuthState]);
+  }, [onAuthError, cancellocoAuth, setAuthState]);
 
   // Sync user tier from config when authentication changes
   // TODO: Implement getUserTier() method on Config if needed
@@ -530,7 +530,7 @@ export const AppContainer = (props: AppContainerProps) => {
     historyManager.addItem(
       {
         type: MessageType.INFO,
-        text: 'Refreshing hierarchical memory (QWEN.md or other context files)...',
+        text: 'Refreshing hierarchical memory (LOCO.md or other context files)...',
       },
       Date.now(),
     );
@@ -1157,7 +1157,7 @@ export const AppContainer = (props: AppContainerProps) => {
     isModelDialogOpen ||
     isPermissionsDialogOpen ||
     isAuthDialogOpen ||
-    (isAuthenticating && isQwenAuthenticating) ||
+    (isAuthenticating && islocoAuthenticating) ||
     isEditorDialogOpen ||
     showIdeRestartPrompt ||
     !!proQuotaRequest ||
@@ -1180,9 +1180,9 @@ export const AppContainer = (props: AppContainerProps) => {
       isConfigInitialized,
       authError,
       isAuthDialogOpen,
-      // Qwen OAuth state
-      isQwenAuth,
-      isQwenAuthenticating,
+      // LOCO OAuth state
+      islocoAuth,
+      islocoAuthenticating,
       deviceAuth,
       authStatus,
       authMessage,
@@ -1275,9 +1275,9 @@ export const AppContainer = (props: AppContainerProps) => {
       isConfigInitialized,
       authError,
       isAuthDialogOpen,
-      // Qwen OAuth state
-      isQwenAuth,
-      isQwenAuthenticating,
+      // LOCO OAuth state
+      islocoAuth,
+      islocoAuthenticating,
       deviceAuth,
       authStatus,
       authMessage,
@@ -1375,9 +1375,9 @@ export const AppContainer = (props: AppContainerProps) => {
       handleAuthSelect,
       setAuthState,
       onAuthError,
-      // Qwen OAuth handlers
-      handleQwenAuthTimeout,
-      handleQwenAuthCancel,
+      // LOCO OAuth handlers
+      handlelocoAuthTimeout,
+      handlelocoAuthCancel,
       handleEditorSelect,
       exitEditorDialog,
       closeSettingsDialog,
@@ -1409,9 +1409,9 @@ export const AppContainer = (props: AppContainerProps) => {
       handleAuthSelect,
       setAuthState,
       onAuthError,
-      // Qwen OAuth handlers
-      handleQwenAuthTimeout,
-      handleQwenAuthCancel,
+      // LOCO OAuth handlers
+      handlelocoAuthTimeout,
+      handlelocoAuthCancel,
       handleEditorSelect,
       exitEditorDialog,
       closeSettingsDialog,

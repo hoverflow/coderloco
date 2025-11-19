@@ -83,8 +83,8 @@ export interface LogResponse {
 
 // Singleton class for batch posting log events to RUM. When a new event comes in, the elapsed time
 // is checked and events are flushed to RUM if at least a minute has passed since the last flush.
-export class QwenLogger {
-  private static instance: QwenLogger;
+export class locoLogger {
+  private static instance: locoLogger;
   private config?: Config;
   private readonly installationManager: InstallationManager;
 
@@ -132,18 +132,18 @@ export class QwenLogger {
     return `user-${installationId ?? 'unknown'}`;
   }
 
-  static getInstance(config?: Config): QwenLogger | undefined {
+  static getInstance(config?: Config): locoLogger | undefined {
     if (config === undefined || !config?.getUsageStatisticsEnabled())
       return undefined;
-    if (!QwenLogger.instance) {
-      QwenLogger.instance = new QwenLogger(config);
+    if (!locoLogger.instance) {
+      locoLogger.instance = new locoLogger(config);
       process.on(
         'exit',
-        QwenLogger.instance.shutdown.bind(QwenLogger.instance),
+        locoLogger.instance.shutdown.bind(locoLogger.instance),
       );
     }
 
-    return QwenLogger.instance;
+    return locoLogger.instance;
   }
 
   enqueueLogEvent(event: RumEvent): void {
@@ -159,12 +159,12 @@ export class QwenLogger {
 
       if (wasAtCapacity && this.config?.getDebugMode()) {
         console.debug(
-          `QwenLogger: Dropped old event to prevent memory leak (queue size: ${this.events.size})`,
+          `locoLogger: Dropped old event to prevent memory leak (queue size: ${this.events.size})`,
         );
       }
     } catch (error) {
       if (this.config?.getDebugMode()) {
-        console.error('QwenLogger: Failed to enqueue log event.', error);
+        console.error('locoLogger: Failed to enqueue log event.', error);
       }
     }
   }
@@ -243,7 +243,7 @@ export class QwenLogger {
       },
       view: {
         id: this.sessionId,
-        name: 'qwen-code-cli',
+        name: 'loco-code-cli',
       },
       os: osMetadata,
 
@@ -256,7 +256,7 @@ export class QwenLogger {
             ? this.config?.getContentGeneratorConfig().baseUrl || ''
             : '',
       },
-      _v: `qwen-code@${version}`,
+      _v: `loco-code@${version}`,
     };
   }
 
@@ -276,7 +276,7 @@ export class QwenLogger {
     if (this.isFlushInProgress) {
       if (this.config?.getDebugMode()) {
         console.debug(
-          'QwenLogger: Flush already in progress, marking pending flush.',
+          'locoLogger: Flush already in progress, marking pending flush.',
         );
       }
       this.pendingFlush = true;
@@ -843,7 +843,7 @@ export class QwenLogger {
     // Log a warning if we're dropping events
     if (eventsToSend.length > MAX_RETRY_EVENTS && this.config?.getDebugMode()) {
       console.warn(
-        `QwenLogger: Dropping ${
+        `locoLogger: Dropping ${
           eventsToSend.length - MAX_RETRY_EVENTS
         } events due to retry queue limit. Total events: ${
           eventsToSend.length
@@ -858,7 +858,7 @@ export class QwenLogger {
     if (numEventsToRequeue === 0) {
       if (this.config?.getDebugMode()) {
         console.debug(
-          `QwenLogger: No events re-queued (queue size: ${this.events.size})`,
+          `locoLogger: No events re-queued (queue size: ${this.events.size})`,
         );
       }
       return;
@@ -881,7 +881,7 @@ export class QwenLogger {
 
     if (this.config?.getDebugMode()) {
       console.debug(
-        `QwenLogger: Re-queued ${numEventsToRequeue} events for retry (queue size: ${this.events.size})`,
+        `locoLogger: Re-queued ${numEventsToRequeue} events for retry (queue size: ${this.events.size})`,
       );
     }
   }

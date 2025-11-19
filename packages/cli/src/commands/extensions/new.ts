@@ -63,13 +63,13 @@ async function handleNew(args: NewArgs) {
         version: '1.0.0',
       };
       await writeFile(
-        join(args.path, 'qwen-extension.json'),
+        join(args.path, 'loco-extension.json'),
         JSON.stringify(manifest, null, 2),
       );
       console.log(`Successfully created new extension at ${args.path}.`);
     }
     console.log(
-      `You can install this using "qwen extensions link ${args.path}" to test it out.`,
+      `You can install this using "LOCO extensions link ${args.path}" to test it out.`,
     );
   } catch (error) {
     console.error(getErrorMessage(error));

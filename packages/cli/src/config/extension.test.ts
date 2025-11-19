@@ -25,7 +25,7 @@ import {
   type Extension,
 } from './extension.js';
 import {
-  QWEN_DIR,
+  loco_DIR,
   type GeminiCLIExtension,
   ExtensionUninstallEvent,
   ExtensionDisableEvent,
@@ -109,7 +109,7 @@ vi.mock('node:readline', () => ({
   })),
 }));
 
-const EXTENSIONS_DIRECTORY_NAME = path.join(QWEN_DIR, 'extensions');
+const EXTENSIONS_DIRECTORY_NAME = path.join(loco_DIR, 'extensions');
 
 describe('extension tests', () => {
   let tempHomeDir: string;
@@ -118,10 +118,10 @@ describe('extension tests', () => {
 
   beforeEach(() => {
     tempHomeDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'qwen-code-test-home-'),
+      path.join(os.tmpdir(), 'loco-code-test-home-'),
     );
     tempWorkspaceDir = fs.mkdtempSync(
-      path.join(tempHomeDir, 'qwen-code-test-workspace-'),
+      path.join(tempHomeDir, 'loco-code-test-workspace-'),
     );
     userExtensionsDir = path.join(tempHomeDir, EXTENSIONS_DIRECTORY_NAME);
     fs.mkdirSync(userExtensionsDir, { recursive: true });
@@ -161,7 +161,7 @@ describe('extension tests', () => {
       expect(extensions[0].config.name).toBe('test-extension');
     });
 
-    it('should load context file path when QWEN.md is present', () => {
+    it('should load context file path when LOCO.md is present', () => {
       createExtension({
         extensionsDir: userExtensionsDir,
         name: 'ext1',
@@ -182,7 +182,7 @@ describe('extension tests', () => {
       const ext1 = extensions.find((e) => e.config.name === 'ext1');
       const ext2 = extensions.find((e) => e.config.name === 'ext2');
       expect(ext1?.contextFiles).toEqual([
-        path.join(userExtensionsDir, 'ext1', 'QWEN.md'),
+        path.join(userExtensionsDir, 'ext1', 'LOCO.md'),
       ]);
       expect(ext2?.contextFiles).toEqual([]);
     });
@@ -735,7 +735,7 @@ describe('extension tests', () => {
       );
     });
 
-    it('should throw an error and cleanup if qwen-extension.json is missing', async () => {
+    it('should throw an error and cleanup if loco-extension.json is missing', async () => {
       const sourceExtDir = path.join(tempHomeDir, 'bad-extension');
       fs.mkdirSync(sourceExtDir, { recursive: true });
       const configPath = path.join(sourceExtDir, EXTENSIONS_CONFIG_FILENAME);
@@ -751,7 +751,7 @@ describe('extension tests', () => {
       expect(fs.existsSync(targetExtDir)).toBe(false);
     });
 
-    it('should throw an error for invalid JSON in qwen-extension.json', async () => {
+    it('should throw an error for invalid JSON in loco-extension.json', async () => {
       const sourceExtDir = path.join(tempHomeDir, 'bad-json-ext');
       fs.mkdirSync(sourceExtDir, { recursive: true });
       const configPath = path.join(sourceExtDir, EXTENSIONS_CONFIG_FILENAME);
@@ -772,7 +772,7 @@ describe('extension tests', () => {
       );
     });
 
-    it('should throw an error for missing name in qwen-extension.json', async () => {
+    it('should throw an error for missing name in loco-extension.json', async () => {
       const sourceExtDir = createExtension({
         extensionsDir: tempHomeDir,
         name: 'missing-name-ext',
@@ -794,7 +794,7 @@ describe('extension tests', () => {
 
     it('should install an extension from a git URL', async () => {
       const gitUrl = 'https://github.com/google/gemini-extensions.git';
-      const extensionName = 'qwen-extensions';
+      const extensionName = 'loco-extensions';
       const targetExtDir = path.join(userExtensionsDir, extensionName);
       const metadataPath = path.join(targetExtDir, INSTALL_METADATA_FILENAME);
 
@@ -1183,7 +1183,7 @@ This extension will run the following MCP servers:
 
         const userExtensionsDir = path.join(
           tempHomeDir,
-          QWEN_DIR,
+          loco_DIR,
           'extensions',
         );
         expect(fs.readdirSync(userExtensionsDir).length).toBe(0);
@@ -1244,7 +1244,7 @@ This extension will run the following MCP servers:
 
       expect(failed).toEqual([]);
 
-      const userExtensionsDir = path.join(tempHomeDir, QWEN_DIR, 'extensions');
+      const userExtensionsDir = path.join(tempHomeDir, loco_DIR, 'extensions');
       const userExt1Path = path.join(userExtensionsDir, 'ext1');
       const extensions = loadExtensions(
         new ExtensionEnablementManager(ExtensionStorage.getUserExtensionsDir()),

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -18,7 +18,7 @@ import React from 'react';
 
 export const initCommand: SlashCommand = {
   name: 'init',
-  description: 'Analyzes the project and creates a tailored QWEN.md file.',
+  description: 'Analyzes the project and creates a tailored LOCO.md file.',
   kind: CommandKind.BUILT_IN,
   action: async (
     context: CommandContext,
@@ -92,7 +92,7 @@ export const initCommand: SlashCommand = {
     return {
       type: 'submit_prompt',
       content: `
-You are Qwen Code, an interactive CLI agent. Analyze the current directory and generate a comprehensive ${contextFileName} file to be used as instructional context for future interactions.
+You are LOCO Code, an interactive CLI agent. Analyze the current directory and generate a comprehensive ${contextFileName} file to be used as instructional context for future interactions.
 
 **Analysis Process:**
 

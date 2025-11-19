@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -95,7 +95,7 @@ describe('OpenRouterOpenAICompatibleProvider', () => {
 
       // Should include User-Agent from parent
       expect(headers['User-Agent']).toBe(
-        `QwenCode/1.0.0 (${process.platform}; ${process.arch})`,
+        `locoCode/1.0.0 (${process.platform}; ${process.arch})`,
       );
     });
 
@@ -103,9 +103,9 @@ describe('OpenRouterOpenAICompatibleProvider', () => {
       const headers = provider.buildHeaders();
 
       expect(headers).toEqual({
-        'User-Agent': `QwenCode/1.0.0 (${process.platform}; ${process.arch})`,
-        'HTTP-Referer': 'https://github.com/QwenLM/qwen-code.git',
-        'X-Title': 'Qwen Code',
+        'User-Agent': `locoCode/1.0.0 (${process.platform}; ${process.arch})`,
+        'HTTP-Referer': 'https://github.com/locoLM/loco-code.git',
+        'X-Title': 'LOCO Code',
       });
     });
 
@@ -124,8 +124,8 @@ describe('OpenRouterOpenAICompatibleProvider', () => {
 
       expect(headers).toEqual({
         'User-Agent': 'ParentAgent/1.0.0',
-        'HTTP-Referer': 'https://github.com/QwenLM/qwen-code.git', // OpenRouter-specific value should override
-        'X-Title': 'Qwen Code',
+        'HTTP-Referer': 'https://github.com/locoLM/loco-code.git', // OpenRouter-specific value should override
+        'X-Title': 'LOCO Code',
       });
 
       parentBuildHeaders.mockRestore();
@@ -137,12 +137,12 @@ describe('OpenRouterOpenAICompatibleProvider', () => {
       const headers = provider.buildHeaders();
 
       expect(headers['User-Agent']).toBe(
-        `QwenCode/unknown (${process.platform}; ${process.arch})`,
+        `locoCode/unknown (${process.platform}; ${process.arch})`,
       );
       expect(headers['HTTP-Referer']).toBe(
-        'https://github.com/QwenLM/qwen-code.git',
+        'https://github.com/locoLM/loco-code.git',
       );
-      expect(headers['X-Title']).toBe('Qwen Code');
+      expect(headers['X-Title']).toBe('LOCO Code');
     });
   });
 
@@ -213,9 +213,9 @@ describe('OpenRouterOpenAICompatibleProvider', () => {
       // Should have both parent and OpenRouter-specific headers
       expect(headers['User-Agent']).toBeDefined(); // From parent
       expect(headers['HTTP-Referer']).toBe(
-        'https://github.com/QwenLM/qwen-code.git',
+        'https://github.com/locoLM/loco-code.git',
       ); // OpenRouter-specific
-      expect(headers['X-Title']).toBe('Qwen Code'); // OpenRouter-specific
+      expect(headers['X-Title']).toBe('LOCO Code'); // OpenRouter-specific
     });
   });
 });

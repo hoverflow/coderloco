@@ -123,7 +123,7 @@ describe('validateNonInterActiveAuth', () => {
     expect(refreshAuthMock).toHaveBeenCalledWith(AuthType.USE_OPENAI);
   });
 
-  it('uses configured QWEN_OAUTH if provided', async () => {
+  it('uses configured loco_OAUTH if provided', async () => {
     const nonInteractiveConfig = {
       refreshAuth: refreshAuthMock,
       getOutputFormat: vi.fn().mockReturnValue(OutputFormat.TEXT),
@@ -132,12 +132,12 @@ describe('validateNonInterActiveAuth', () => {
         .mockReturnValue({ authType: undefined }),
     } as unknown as Config;
     await validateNonInteractiveAuth(
-      AuthType.QWEN_OAUTH,
+      AuthType.loco_OAUTH,
       undefined,
       nonInteractiveConfig,
       mockSettings,
     );
-    expect(refreshAuthMock).toHaveBeenCalledWith(AuthType.QWEN_OAUTH);
+    expect(refreshAuthMock).toHaveBeenCalledWith(AuthType.loco_OAUTH);
   });
 
   it('exits if validateAuthMethod returns error', async () => {
@@ -208,7 +208,7 @@ describe('validateNonInterActiveAuth', () => {
   });
 
   it('exits if currentAuthType does not match enforcedAuthType', async () => {
-    mockSettings.merged.security!.auth!.enforcedType = AuthType.QWEN_OAUTH;
+    mockSettings.merged.security!.auth!.enforcedType = AuthType.loco_OAUTH;
     process.env['OPENAI_API_KEY'] = 'fake-key';
     const nonInteractiveConfig = {
       refreshAuth: refreshAuthMock,
@@ -229,7 +229,7 @@ describe('validateNonInterActiveAuth', () => {
       expect((e as Error).message).toContain('process.exit(1) called');
     }
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'The configured auth type is qwen-oauth, but the current auth type is openai. Please re-authenticate with the correct type.',
+      'The configured auth type is loco-oauth, but the current auth type is openai. Please re-authenticate with the correct type.',
     );
     expect(processExitSpy).toHaveBeenCalledWith(1);
   });
@@ -267,7 +267,7 @@ describe('validateNonInterActiveAuth', () => {
     });
 
     it('prints JSON error when enforced auth mismatches current auth and exits with code 1', async () => {
-      mockSettings.merged.security!.auth!.enforcedType = AuthType.QWEN_OAUTH;
+      mockSettings.merged.security!.auth!.enforcedType = AuthType.loco_OAUTH;
       process.env['OPENAI_API_KEY'] = 'fake-key';
 
       const nonInteractiveConfig = {
@@ -297,7 +297,7 @@ describe('validateNonInterActiveAuth', () => {
         expect(payload.error.type).toBe('Error');
         expect(payload.error.code).toBe(1);
         expect(payload.error.message).toContain(
-          'The configured auth type is qwen-oauth, but the current auth type is openai.',
+          'The configured auth type is loco-oauth, but the current auth type is openai.',
         );
       }
     });

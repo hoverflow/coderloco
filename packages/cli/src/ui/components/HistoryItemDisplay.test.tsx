@@ -93,7 +93,7 @@ describe('<HistoryItemDisplay />', () => {
     const { lastFrame } = renderWithProviders(
       <HistoryItemDisplay {...baseItem} item={item} />,
     );
-    expect(lastFrame()).toContain('About Qwen Code');
+    expect(lastFrame()).toContain('About LOCO Code');
   });
 
   it('renders ModelStatsDisplay for "model_stats" type', () => {

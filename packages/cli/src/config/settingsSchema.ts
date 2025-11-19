@@ -700,13 +700,13 @@ const SETTINGS_SCHEMA = {
             description: 'Respect .gitignore files when searching',
             showInDialog: true,
           },
-          respectQwenIgnore: {
+          respectlocoIgnore: {
             type: 'boolean',
-            label: 'Respect .qwenignore',
+            label: 'Respect .locoignore',
             category: 'Context',
             requiresRestart: true,
             default: true,
-            description: 'Respect .qwenignore files when searching',
+            description: 'Respect .locoignore files when searching',
             showInDialog: true,
           },
           enableRecursiveFileSearch: {
@@ -1154,7 +1154,7 @@ const SETTINGS_SCHEMA = {
         requiresRestart: false,
         default: true,
         description:
-          'Enable vision model support and auto-switching functionality. When disabled, vision models like qwen-vl-max-latest will be hidden and auto-switching will not occur.',
+          'Enable vision model support and auto-switching functionality. When disabled, vision models like loco-vl-max-latest will be hidden and auto-switching will not occur.',
         showInDialog: true,
       },
       vlmSwitchMode: {

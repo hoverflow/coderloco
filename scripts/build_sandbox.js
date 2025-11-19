@@ -90,11 +90,11 @@ if (!argv.s) {
   execSync('npm run build --workspaces', { stdio: 'inherit' });
 }
 
-console.log('packing @qwen-code/qwen-code ...');
+console.log('packing @loco-code/loco-code ...');
 const cliPackageDir = join('packages', 'cli');
-rmSync(join(cliPackageDir, 'dist', 'qwen-code-*.tgz'), { force: true });
+rmSync(join(cliPackageDir, 'dist', 'loco-code-*.tgz'), { force: true });
 execSync(
-  `npm pack -w @qwen-code/qwen-code --pack-destination ./packages/cli/dist`,
+  `npm pack -w @loco-code/loco-code --pack-destination ./packages/cli/dist`,
   {
     stdio: 'ignore',
   },
@@ -102,7 +102,7 @@ execSync(
 
 console.log('packing @coderloco/coderloco-core ...');
 const corePackageDir = join('packages', 'core');
-rmSync(join(corePackageDir, 'dist', 'qwen-code-core-*.tgz'), {
+rmSync(join(corePackageDir, 'dist', 'loco-code-core-*.tgz'), {
   force: true,
 });
 execSync(
@@ -115,14 +115,14 @@ const packageVersion = JSON.parse(
 ).version;
 
 chmodSync(
-  join(cliPackageDir, 'dist', `qwen-code-qwen-code-${packageVersion}.tgz`),
+  join(cliPackageDir, 'dist', `loco-code-loco-code-${packageVersion}.tgz`),
   0o755,
 );
 chmodSync(
   join(
     corePackageDir,
     'dist',
-    `qwen-code-qwen-code-core-${packageVersion}.tgz`,
+    `loco-code-loco-code-core-${packageVersion}.tgz`,
   ),
   0o755,
 );
@@ -143,7 +143,7 @@ function buildImage(imageName, dockerfile) {
     if (isWindows) {
       // PowerShell doesn't support <() process substitution.
       // Create a temporary auth file that we will clean up after.
-      tempAuthFile = join(os.tmpdir(), `qwen-auth-${Date.now()}.json`);
+      tempAuthFile = join(os.tmpdir(), `loco-auth-${Date.now()}.json`);
       writeFileSync(tempAuthFile, '{}');
       buildCommandArgs = `--authfile="${tempAuthFile}"`;
     } else {

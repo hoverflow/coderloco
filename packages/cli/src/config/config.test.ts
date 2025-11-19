@@ -11,7 +11,7 @@ import {
   ShellTool,
   EditTool,
   WriteFileTool,
-  DEFAULT_QWEN_MODEL,
+  DEFAULT_loco_MODEL,
   OutputFormat,
 } from '@coderloco/coderloco-core';
 import { loadCliConfig, parseArguments, type CliArgs } from './config.js';
@@ -100,11 +100,11 @@ vi.mock('@coderloco/coderloco-core', async () => {
     ),
     DEFAULT_MEMORY_FILE_FILTERING_OPTIONS: {
       respectGitIgnore: false,
-      respectQwenIgnore: true,
+      respectlocoIgnore: true,
     },
     DEFAULT_FILE_FILTERING_OPTIONS: {
       respectGitIgnore: true,
-      respectQwenIgnore: true,
+      respectlocoIgnore: true,
     },
   };
 });
@@ -1100,7 +1100,7 @@ describe('Hierarchical Memory Loading (config.ts) - Placeholder Suite', () => {
           name: 'ext1',
           version: '1.0.0',
         },
-        contextFiles: ['/path/to/ext1/QWEN.md'],
+        contextFiles: ['/path/to/ext1/LOCO.md'],
       },
       {
         path: '/path/to/ext2',
@@ -1140,7 +1140,7 @@ describe('Hierarchical Memory Loading (config.ts) - Placeholder Suite', () => {
       false,
       expect.any(Object),
       [
-        '/path/to/ext1/QWEN.md',
+        '/path/to/ext1/LOCO.md',
         '/path/to/ext3/context1.md',
         '/path/to/ext3/context2.md',
       ],
@@ -1148,7 +1148,7 @@ describe('Hierarchical Memory Loading (config.ts) - Placeholder Suite', () => {
       'tree',
       {
         respectGitIgnore: false,
-        respectQwenIgnore: true,
+        respectlocoIgnore: true,
       },
       undefined, // maxDirs
     );
@@ -1163,8 +1163,8 @@ describe('Hierarchical Memory Loading (config.ts) - Placeholder Suite', () => {
   // 3. Spies on console functions (for logger output) are correctly set up if needed.
   // Example of a previously failing test structure:
   it.skip('should correctly use mocked homedir for global path', async () => {
-    const MOCK_GEMINI_DIR_LOCAL = path.join('/mock/home/user', '.qwen');
-    const MOCK_GLOBAL_PATH_LOCAL = path.join(MOCK_GEMINI_DIR_LOCAL, 'QWEN.md');
+    const MOCK_GEMINI_DIR_LOCAL = path.join('/mock/home/user', '.loco');
+    const MOCK_GLOBAL_PATH_LOCAL = path.join(MOCK_GEMINI_DIR_LOCAL, 'LOCO.md');
     mockFs({
       [MOCK_GLOBAL_PATH_LOCAL]: { type: 'file', content: 'GlobalContentOnly' },
     });
@@ -2057,7 +2057,7 @@ describe('loadCliConfig model selection', () => {
     const config = await loadCliConfig(
       {
         model: {
-          name: 'qwen3-coder-plus',
+          name: 'loco3-coder-plus',
         },
       },
       [],
@@ -2069,7 +2069,7 @@ describe('loadCliConfig model selection', () => {
       argv,
     );
 
-    expect(config.getModel()).toBe('qwen3-coder-plus');
+    expect(config.getModel()).toBe('loco3-coder-plus');
   });
 
   it.skip('uses the default gemini model if nothing is set', async () => {
@@ -2088,16 +2088,16 @@ describe('loadCliConfig model selection', () => {
       argv,
     );
 
-    expect(config.getModel()).toBe(DEFAULT_QWEN_MODEL);
+    expect(config.getModel()).toBe(DEFAULT_loco_MODEL);
   });
 
   it('always prefers model from argvs', async () => {
-    process.argv = ['node', 'script.js', '--model', 'qwen3-coder-plus'];
+    process.argv = ['node', 'script.js', '--model', 'loco3-coder-plus'];
     const argv = await parseArguments({} as Settings);
     const config = await loadCliConfig(
       {
         model: {
-          name: 'qwen3-coder-flash',
+          name: 'loco3-coder-flash',
         },
       },
       [],
@@ -2109,11 +2109,11 @@ describe('loadCliConfig model selection', () => {
       argv,
     );
 
-    expect(config.getModel()).toBe('qwen3-coder-plus');
+    expect(config.getModel()).toBe('loco3-coder-plus');
   });
 
   it('selects the model from argvs if provided', async () => {
-    process.argv = ['node', 'script.js', '--model', 'qwen3-coder-plus'];
+    process.argv = ['node', 'script.js', '--model', 'loco3-coder-plus'];
     const argv = await parseArguments({} as Settings);
     const config = await loadCliConfig(
       {
@@ -2128,7 +2128,7 @@ describe('loadCliConfig model selection', () => {
       argv,
     );
 
-    expect(config.getModel()).toBe('qwen3-coder-plus');
+    expect(config.getModel()).toBe('loco3-coder-plus');
   });
 });
 
@@ -3152,13 +3152,13 @@ describe('loadCliConfig fileFiltering', () => {
       value: false,
     },
     {
-      property: 'respectQwenIgnore',
-      getter: (c) => c.getFileFilteringRespectQwenIgnore(),
+      property: 'respectlocoIgnore',
+      getter: (c) => c.getFileFilteringRespectlocoIgnore(),
       value: true,
     },
     {
-      property: 'respectQwenIgnore',
-      getter: (c) => c.getFileFilteringRespectQwenIgnore(),
+      property: 'respectlocoIgnore',
+      getter: (c) => c.getFileFilteringRespectlocoIgnore(),
       value: false,
     },
     {

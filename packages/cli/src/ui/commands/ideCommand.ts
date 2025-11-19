@@ -13,7 +13,7 @@ import {
   IdeConnectionType,
 } from '@coderloco/coderloco-core';
 import {
-  QWEN_CODE_COMPANION_EXTENSION_NAME,
+  loco_CODE_COMPANION_EXTENSION_NAME,
   getIdeInstaller,
   IDEConnectionStatus,
   ideContextStore,
@@ -144,7 +144,7 @@ export const ideCommand = async (): Promise<SlashCommand> => {
         ({
           type: 'message',
           messageType: 'error',
-          content: `IDE integration is not supported in your current environment. To use this feature, run Qwen Code in one of these supported IDEs: VS Code or VS Code forks.`,
+          content: `IDE integration is not supported in your current environment. To use this feature, run LOCO Code in one of these supported IDEs: VS Code or VS Code forks.`,
         }) as const,
     };
   }
@@ -181,7 +181,7 @@ export const ideCommand = async (): Promise<SlashCommand> => {
         context.ui.addItem(
           {
             type: 'error',
-            text: `No installer is available for ${ideClient.getDetectedIdeDisplayName()}. Please install the '${QWEN_CODE_COMPANION_EXTENSION_NAME}' extension manually from the marketplace.`,
+            text: `No installer is available for ${ideClient.getDetectedIdeDisplayName()}. Please install the '${loco_CODE_COMPANION_EXTENSION_NAME}' extension manually from the marketplace.`,
           },
           Date.now(),
         );

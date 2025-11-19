@@ -11,8 +11,8 @@ import { renderHook, waitFor, act } from '@testing-library/react';
 import { useAtCompletion } from './useAtCompletion.js';
 import type { Config, FileSearch } from '@coderloco/coderloco-core';
 import { FileSearchFactory } from '@coderloco/coderloco-core';
-import type { FileSystemStructure } from '@qwen-code/qwen-code-test-utils';
-import { createTmpDir, cleanupTmpDir } from '@qwen-code/qwen-code-test-utils';
+import type { FileSystemStructure } from '@loco-code/loco-code-test-utils';
+import { createTmpDir, cleanupTmpDir } from '@loco-code/loco-code-test-utils';
 import { useState } from 'react';
 import type { Suggestion } from '../components/SuggestionsDisplay.js';
 
@@ -46,7 +46,7 @@ describe('useAtCompletion', () => {
     mockConfig = {
       getFileFilteringOptions: vi.fn(() => ({
         respectGitIgnore: true,
-        respectQwenIgnore: true,
+        respectlocoIgnore: true,
       })),
       getEnableRecursiveFileSearch: () => true,
       getFileFilteringDisableFuzzySearch: () => false,
@@ -193,7 +193,7 @@ describe('useAtCompletion', () => {
         projectRoot: testRootDir,
         ignoreDirs: [],
         useGitignore: true,
-        useQwenignore: true,
+        uselocoignore: true,
         cache: false,
         cacheTtl: 0,
         enableRecursiveFileSearch: true,
@@ -477,7 +477,7 @@ describe('useAtCompletion', () => {
         getEnableRecursiveFileSearch: () => false,
         getFileFilteringOptions: vi.fn(() => ({
           respectGitIgnore: true,
-          respectQwenIgnore: true,
+          respectlocoIgnore: true,
         })),
         getFileFilteringDisableFuzzySearch: () => false,
       } as unknown as Config;

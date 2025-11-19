@@ -12,7 +12,7 @@ import {
   type AuthType,
   type EditorType,
   type ApprovalMode,
-} from '@qwen-code/qwen-code-core';
+} from '@loco-code/loco-code-core';
 import { type SettingScope } from '../../config/settings.js';
 import type { AuthState } from '../types.js';
 export interface UIActions {
@@ -31,9 +31,9 @@ export interface UIActions {
   ) => void;
   setAuthState: (state: AuthState) => void;
   onAuthError: (error: string) => void;
-  // Qwen OAuth handlers
-  handleQwenAuthTimeout: () => void;
-  handleQwenAuthCancel: () => void;
+  // LOCO OAuth handlers
+  handlelocoAuthTimeout: () => void;
+  handlelocoAuthCancel: () => void;
   handleEditorSelect: (
     editorType: EditorType | undefined,
     scope: SettingScope,

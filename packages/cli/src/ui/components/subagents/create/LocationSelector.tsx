@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -15,11 +15,11 @@ interface LocationOption {
 
 const locationOptions: LocationOption[] = [
   {
-    label: 'Project Level (.qwen/agents/)',
+    label: 'Project Level (.loco/agents/)',
     value: 'project',
   },
   {
-    label: 'User Level (~/.qwen/agents/)',
+    label: 'User Level (~/.loco/agents/)',
     value: 'user',
   },
 ];

@@ -17,7 +17,7 @@ import type { Settings } from './settings.js';
 import stripJsonComments from 'strip-json-comments';
 
 export const TRUSTED_FOLDERS_FILENAME = 'trustedFolders.json';
-export const SETTINGS_DIRECTORY_NAME = '.qwen';
+export const SETTINGS_DIRECTORY_NAME = '.loco';
 export const USER_SETTINGS_DIR = path.join(homedir(), SETTINGS_DIRECTORY_NAME);
 
 export function getTrustedFoldersPath(): string {

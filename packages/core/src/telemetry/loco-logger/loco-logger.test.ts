@@ -14,7 +14,7 @@ import {
   afterAll,
 } from 'vitest';
 import * as os from 'node:os';
-import { QwenLogger, TEST_ONLY } from './qwen-logger.js';
+import { locoLogger, TEST_ONLY } from './loco-logger.js';
 import type { Config } from '../../config/config.js';
 import { AuthType } from '../../core/contentGenerator.js';
 import {
@@ -48,7 +48,7 @@ const makeFakeConfig = (overrides: Partial<Config> = {}): Config => {
     getCliVersion: () => '1.0.0',
     getProxy: () => undefined,
     getContentGeneratorConfig: () => ({ authType: 'test-auth' }),
-    getAuthType: () => AuthType.QWEN_OAUTH,
+    getAuthType: () => AuthType.loco_OAUTH,
     getMcpServers: () => ({}),
     getModel: () => 'test-model',
     getEmbeddingModel: () => 'test-embedding',
@@ -64,7 +64,7 @@ const makeFakeConfig = (overrides: Partial<Config> = {}): Config => {
   return defaults as Config;
 };
 
-describe('QwenLogger', () => {
+describe('locoLogger', () => {
   let mockConfig: Config;
 
   beforeEach(() => {
@@ -73,7 +73,7 @@ describe('QwenLogger', () => {
     mockConfig = makeFakeConfig();
     // Clear singleton instance
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (QwenLogger as any).instance = undefined;
+    (locoLogger as any).instance = undefined;
   });
 
   afterEach(() => {
@@ -83,31 +83,31 @@ describe('QwenLogger', () => {
 
   afterAll(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (QwenLogger as any).instance = undefined;
+    (locoLogger as any).instance = undefined;
   });
 
   describe('getInstance', () => {
     it('returns undefined when usage statistics are disabled', () => {
       const config = makeFakeConfig({ getUsageStatisticsEnabled: () => false });
-      const logger = QwenLogger.getInstance(config);
+      const logger = locoLogger.getInstance(config);
       expect(logger).toBeUndefined();
     });
 
     it('returns an instance when usage statistics are enabled', () => {
-      const logger = QwenLogger.getInstance(mockConfig);
-      expect(logger).toBeInstanceOf(QwenLogger);
+      const logger = locoLogger.getInstance(mockConfig);
+      expect(logger).toBeInstanceOf(locoLogger);
     });
 
     it('is a singleton', () => {
-      const logger1 = QwenLogger.getInstance(mockConfig);
-      const logger2 = QwenLogger.getInstance(mockConfig);
+      const logger1 = locoLogger.getInstance(mockConfig);
+      const logger2 = locoLogger.getInstance(mockConfig);
       expect(logger1).toBe(logger2);
     });
   });
 
   describe('createRumPayload', () => {
     it('includes os metadata in payload', async () => {
-      const logger = QwenLogger.getInstance(mockConfig)!;
+      const logger = locoLogger.getInstance(mockConfig)!;
       const payload = await (
         logger as unknown as {
           createRumPayload(): Promise<RumPayload>;
@@ -126,7 +126,7 @@ describe('QwenLogger', () => {
   describe('event queue management', () => {
     it('should handle event overflow gracefully', () => {
       const debugConfig = makeFakeConfig({ getDebugMode: () => true });
-      const logger = QwenLogger.getInstance(debugConfig)!;
+      const logger = locoLogger.getInstance(debugConfig)!;
       const consoleSpy = vi
         .spyOn(console, 'debug')
         .mockImplementation(() => {});
@@ -144,14 +144,14 @@ describe('QwenLogger', () => {
       // Should have logged debug messages about dropping events
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          'QwenLogger: Dropped old event to prevent memory leak',
+          'locoLogger: Dropped old event to prevent memory leak',
         ),
       );
     });
 
     it('should handle enqueue errors gracefully', () => {
       const debugConfig = makeFakeConfig({ getDebugMode: () => true });
-      const logger = QwenLogger.getInstance(debugConfig)!;
+      const logger = locoLogger.getInstance(debugConfig)!;
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
@@ -170,7 +170,7 @@ describe('QwenLogger', () => {
       });
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        'QwenLogger: Failed to enqueue log event.',
+        'locoLogger: Failed to enqueue log event.',
         expect.any(Error),
       );
 
@@ -182,7 +182,7 @@ describe('QwenLogger', () => {
   describe('concurrent flush protection', () => {
     it('should handle concurrent flush requests', () => {
       const debugConfig = makeFakeConfig({ getDebugMode: () => true });
-      const logger = QwenLogger.getInstance(debugConfig)!;
+      const logger = locoLogger.getInstance(debugConfig)!;
       const consoleSpy = vi
         .spyOn(console, 'debug')
         .mockImplementation(() => {});
@@ -196,7 +196,7 @@ describe('QwenLogger', () => {
       // Should have logged about pending flush
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining(
-          'QwenLogger: Flush already in progress, marking pending flush',
+          'locoLogger: Flush already in progress, marking pending flush',
         ),
       );
 
@@ -211,7 +211,7 @@ describe('QwenLogger', () => {
   describe('failed event retry mechanism', () => {
     it('should requeue failed events with size limits', () => {
       const debugConfig = makeFakeConfig({ getDebugMode: () => true });
-      const logger = QwenLogger.getInstance(debugConfig)!;
+      const logger = locoLogger.getInstance(debugConfig)!;
       const consoleSpy = vi
         .spyOn(console, 'debug')
         .mockImplementation(() => {});
@@ -232,13 +232,13 @@ describe('QwenLogger', () => {
 
       // Should have logged about dropping events due to retry limit
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('QwenLogger: Re-queued'),
+        expect.stringContaining('locoLogger: Re-queued'),
       );
     });
 
     it('should handle empty retry queue gracefully', () => {
       const debugConfig = makeFakeConfig({ getDebugMode: () => true });
-      const logger = QwenLogger.getInstance(debugConfig)!;
+      const logger = locoLogger.getInstance(debugConfig)!;
       const consoleSpy = vi
         .spyOn(console, 'debug')
         .mockImplementation(() => {});
@@ -267,14 +267,14 @@ describe('QwenLogger', () => {
       (logger as any).requeueFailedEvents(failedEvents);
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('QwenLogger: No events re-queued'),
+        expect.stringContaining('locoLogger: No events re-queued'),
       );
     });
   });
 
   describe('event handlers', () => {
     it('should log IDE connection events', () => {
-      const logger = QwenLogger.getInstance(mockConfig)!;
+      const logger = locoLogger.getInstance(mockConfig)!;
       const enqueueSpy = vi.spyOn(logger, 'enqueueLogEvent');
 
       const event = new IdeConnectionEvent(IdeConnectionType.SESSION);
@@ -294,7 +294,7 @@ describe('QwenLogger', () => {
     });
 
     it('should log Kitty sequence overflow events', () => {
-      const logger = QwenLogger.getInstance(mockConfig)!;
+      const logger = locoLogger.getInstance(mockConfig)!;
       const enqueueSpy = vi.spyOn(logger, 'enqueueLogEvent');
 
       const event = new KittySequenceOverflowEvent(1024, 'truncated...');
@@ -316,7 +316,7 @@ describe('QwenLogger', () => {
     });
 
     it('should flush start session events immediately', async () => {
-      const logger = QwenLogger.getInstance(mockConfig)!;
+      const logger = locoLogger.getInstance(mockConfig)!;
       const flushSpy = vi.spyOn(logger, 'flushToRum').mockResolvedValue({});
 
       const testConfig = makeFakeConfig({
@@ -331,7 +331,7 @@ describe('QwenLogger', () => {
     });
 
     it('should flush end session events immediately', async () => {
-      const logger = QwenLogger.getInstance(mockConfig)!;
+      const logger = locoLogger.getInstance(mockConfig)!;
       const flushSpy = vi.spyOn(logger, 'flushToRum').mockResolvedValue({});
 
       const event = new EndSessionEvent(mockConfig);
@@ -344,7 +344,7 @@ describe('QwenLogger', () => {
 
   describe('flush timing', () => {
     it('should not flush if interval has not passed', () => {
-      const logger = QwenLogger.getInstance(mockConfig)!;
+      const logger = locoLogger.getInstance(mockConfig)!;
       const flushSpy = vi.spyOn(logger, 'flushToRum');
 
       // Add an event and try to flush immediately
@@ -361,7 +361,7 @@ describe('QwenLogger', () => {
     });
 
     it('should flush when interval has passed', () => {
-      const logger = QwenLogger.getInstance(mockConfig)!;
+      const logger = locoLogger.getInstance(mockConfig)!;
       const flushSpy = vi.spyOn(logger, 'flushToRum').mockResolvedValue({});
 
       // Add an event
@@ -384,7 +384,7 @@ describe('QwenLogger', () => {
   describe('error handling', () => {
     it('should handle flush errors gracefully with debug mode', async () => {
       const debugConfig = makeFakeConfig({ getDebugMode: () => true });
-      const logger = QwenLogger.getInstance(debugConfig)!;
+      const logger = locoLogger.getInstance(debugConfig)!;
       const consoleSpy = vi
         .spyOn(console, 'debug')
         .mockImplementation(() => {});

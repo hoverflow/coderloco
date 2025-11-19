@@ -26,11 +26,11 @@ describe('UserAccountManager', () => {
 
   beforeEach(() => {
     tempHomeDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), 'qwen-code-test-home-'),
+      path.join(os.tmpdir(), 'loco-code-test-home-'),
     );
     (os.homedir as Mock).mockReturnValue(tempHomeDir);
     accountsFile = () =>
-      path.join(tempHomeDir, '.qwen', 'google_accounts.json');
+      path.join(tempHomeDir, '.loco', 'google_accounts.json');
     userAccountManager = new UserAccountManager();
   });
 

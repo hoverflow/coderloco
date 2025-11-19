@@ -28,11 +28,11 @@ vi.mock('@coderloco/coderloco-core', () => ({
     DISCONNECTED: 'DISCONNECTED',
   },
   Storage: vi.fn().mockImplementation((_cwd: string) => ({
-    getGlobalSettingsPath: () => '/tmp/qwen/settings.json',
-    getWorkspaceSettingsPath: () => '/tmp/qwen/workspace-settings.json',
-    getProjectTempDir: () => '/test/home/.qwen/tmp/mocked_hash',
+    getGlobalSettingsPath: () => '/tmp/loco/settings.json',
+    getWorkspaceSettingsPath: () => '/tmp/loco/workspace-settings.json',
+    getProjectTempDir: () => '/test/home/.loco/tmp/mocked_hash',
   })),
-  QWEN_CONFIG_DIR: '.qwen',
+  loco_CONFIG_DIR: '.loco',
   getErrorMessage: (e: unknown) => (e instanceof Error ? e.message : String(e)),
 }));
 vi.mock('@modelcontextprotocol/sdk/client/index.js');

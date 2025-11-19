@@ -1,12 +1,12 @@
 /**
  * @license
- * Copyright 2025 Qwen
+ * Copyright 2025 loco
  * SPDX-License-Identifier: Apache-2.0
  */
 
 import { OpenAIContentGenerator } from '../core/openaiContentGenerator/index.js';
 import { DashScopeOpenAICompatibleProvider } from '../core/openaiContentGenerator/provider/dashscope.js';
-import type { IQwenOAuth2Client } from './qwenOAuth2.js';
+import type { IlocoOAuth2Client } from './locoOAuth2.js';
 import { SharedTokenManager } from './sharedTokenManager.js';
 import { type Config } from '../config/config.js';
 import type {
@@ -21,19 +21,19 @@ import type { ContentGeneratorConfig } from '../core/contentGenerator.js';
 import { DEFAULT_DASHSCOPE_BASE_URL } from '../core/openaiContentGenerator/constants.js';
 
 /**
- * Qwen Content Generator that uses Qwen OAuth tokens with automatic refresh
+ * LOCO Content Generator that uses LOCO OAuth tokens with automatic refresh
  */
-export class QwenContentGenerator extends OpenAIContentGenerator {
-  private qwenClient: IQwenOAuth2Client;
+export class locoContentGenerator extends OpenAIContentGenerator {
+  private locoClient: IlocoOAuth2Client;
   private sharedManager: SharedTokenManager;
   private currentToken?: string;
 
   constructor(
-    qwenClient: IQwenOAuth2Client,
+    locoClient: IlocoOAuth2Client,
     contentGeneratorConfig: ContentGeneratorConfig,
     cliConfig: Config,
   ) {
-    // Create DashScope provider for Qwen
+    // Create DashScope provider for loco
     const dashscopeProvider = new DashScopeOpenAICompatibleProvider(
       contentGeneratorConfig,
       cliConfig,
@@ -41,7 +41,7 @@ export class QwenContentGenerator extends OpenAIContentGenerator {
 
     // Initialize with DashScope provider
     super(contentGeneratorConfig, cliConfig, dashscopeProvider);
-    this.qwenClient = qwenClient;
+    this.locoClient = locoClient;
     this.sharedManager = SharedTokenManager.getInstance();
 
     // Set default base URL, will be updated dynamically
@@ -86,7 +86,7 @@ export class QwenContentGenerator extends OpenAIContentGenerator {
     try {
       // Use SharedTokenManager for consistent token/endpoint pairing and automatic refresh
       const credentials = await this.sharedManager.getValidCredentials(
-        this.qwenClient,
+        this.locoClient,
       );
 
       if (!credentials.access_token) {
@@ -104,7 +104,7 @@ export class QwenContentGenerator extends OpenAIContentGenerator {
       }
       console.warn('Failed to get token from shared manager:', error);
       throw new Error(
-        'Failed to obtain valid Qwen access token. Please re-authenticate.',
+        'Failed to obtain valid LOCO access token. Please re-authenticate.',
       );
     }
   }
@@ -140,7 +140,7 @@ export class QwenContentGenerator extends OpenAIContentGenerator {
       if (this.isAuthError(error)) {
         // Use SharedTokenManager to properly refresh and persist the token
         // This ensures the refreshed token is saved to oauth_creds.json
-        await this.sharedManager.getValidCredentials(this.qwenClient, true);
+        await this.sharedManager.getValidCredentials(this.locoClient, true);
         return await attemptOperation();
       }
       throw error;

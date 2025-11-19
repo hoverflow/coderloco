@@ -10,7 +10,7 @@ import type {
   ExtensionInstallMetadata,
 } from '@coderloco/coderloco-core';
 import {
-  QWEN_DIR,
+  loco_DIR,
   Storage,
   Config,
   ExtensionInstallEvent,
@@ -40,10 +40,10 @@ import { ExtensionEnablementManager } from './extensions/extensionEnablement.js'
 import chalk from 'chalk';
 import type { ConfirmationRequest } from '../ui/types.js';
 
-export const EXTENSIONS_DIRECTORY_NAME = path.join(QWEN_DIR, 'extensions');
+export const EXTENSIONS_DIRECTORY_NAME = path.join(loco_DIR, 'extensions');
 
-export const EXTENSIONS_CONFIG_FILENAME = 'qwen-extension.json';
-export const INSTALL_METADATA_FILENAME = '.qwen-extension-install.json';
+export const EXTENSIONS_CONFIG_FILENAME = 'loco-extension.json';
+export const INSTALL_METADATA_FILENAME = '.loco-extension-install.json';
 
 export interface Extension {
   path: string;
@@ -90,7 +90,7 @@ export class ExtensionStorage {
   }
 
   static async createTmpDir(): Promise<string> {
-    return await fs.promises.mkdtemp(path.join(os.tmpdir(), 'qwen-extension'));
+    return await fs.promises.mkdtemp(path.join(os.tmpdir(), 'loco-extension'));
   }
 }
 
@@ -303,7 +303,7 @@ export function loadInstallMetadata(
 
 function getContextFileNames(config: ExtensionConfig): string[] {
   if (!config.contextFileName) {
-    return ['QWEN.md'];
+    return ['LOCO.md'];
   } else if (!Array.isArray(config.contextFileName)) {
     return [config.contextFileName];
   }

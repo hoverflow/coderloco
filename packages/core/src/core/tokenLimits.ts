@@ -48,10 +48,10 @@ export function normalize(model: string): string {
   // - dates (e.g., -20250219), -v1, version numbers, 'latest', 'preview' etc.
   s = s.replace(/-preview/g, '');
   // Special handling for model names that include date/version as part of the model identifier
-  // - Qwen models: qwen-plus-latest, qwen-flash-latest, qwen-vl-max-latest
+  // - LOCO models: loco-plus-latest, loco-flash-latest, loco-vl-max-latest
   // - Kimi models: kimi-k2-0905, kimi-k2-0711, etc. (keep date for version distinction)
   if (
-    !s.match(/^qwen-(?:plus|flash|vl-max)-latest$/) &&
+    !s.match(/^loco-(?:plus|flash|vl-max)-latest$/) &&
     !s.match(/^kimi-k2-\d{4}$/)
   ) {
     // Regex breakdown:
@@ -111,42 +111,42 @@ const PATTERNS: Array<[RegExp, TokenCount]> = [
   [/^claude-opus-4.*$/, LIMITS['1m']],
 
   // -------------------
-  // Alibaba / Qwen
+  // Alibaba / loco
   // -------------------
-  // Commercial Qwen3-Coder-Plus: 1M token context
-  [/^qwen3-coder-plus(-.*)?$/, LIMITS['1m']], // catches "qwen3-coder-plus" and date variants
+  // Commercial loco3-Coder-Plus: 1M token context
+  [/^loco3-coder-plus(-.*)?$/, LIMITS['1m']], // catches "loco3-coder-plus" and date variants
 
-  // Commercial Qwen3-Coder-Flash: 1M token context
-  [/^qwen3-coder-flash(-.*)?$/, LIMITS['1m']], // catches "qwen3-coder-flash" and date variants
+  // Commercial loco3-Coder-Flash: 1M token context
+  [/^loco3-coder-flash(-.*)?$/, LIMITS['1m']], // catches "loco3-coder-flash" and date variants
 
-  // Generic coder-model: same as qwen3-coder-plus (1M token context)
+  // Generic coder-model: same as loco3-coder-plus (1M token context)
   [/^coder-model$/, LIMITS['1m']],
 
-  // Commercial Qwen3-Max-Preview: 256K token context
-  [/^qwen3-max(-preview)?(-.*)?$/, LIMITS['256k']], // catches "qwen3-max" or "qwen3-max-preview" and date variants
+  // Commercial loco3-Max-Preview: 256K token context
+  [/^loco3-max(-preview)?(-.*)?$/, LIMITS['256k']], // catches "loco3-max" or "loco3-max-preview" and date variants
 
-  // Open-source Qwen3-Coder variants: 256K native
-  [/^qwen3-coder-.*$/, LIMITS['256k']],
-  // Open-source Qwen3 2507 variants: 256K native
-  [/^qwen3-.*-2507-.*$/, LIMITS['256k']],
+  // Open-source loco3-Coder variants: 256K native
+  [/^loco3-coder-.*$/, LIMITS['256k']],
+  // Open-source loco3 2507 variants: 256K native
+  [/^loco3-.*-2507-.*$/, LIMITS['256k']],
 
-  // Open-source long-context Qwen2.5-1M
-  [/^qwen2\.5-1m.*$/, LIMITS['1m']],
+  // Open-source long-context loco2.5-1M
+  [/^loco2\.5-1m.*$/, LIMITS['1m']],
 
-  // Standard Qwen2.5: 128K
-  [/^qwen2\.5.*$/, LIMITS['128k']],
+  // Standard loco2.5: 128K
+  [/^loco2\.5.*$/, LIMITS['128k']],
 
-  // Studio commercial Qwen-Plus / Qwen-Flash / Qwen-Turbo
-  [/^qwen-plus-latest$/, LIMITS['1m']], // Commercial latest: 1M
-  [/^qwen-plus.*$/, LIMITS['128k']], // Standard: 128K
-  [/^qwen-flash-latest$/, LIMITS['1m']],
-  [/^qwen-turbo.*$/, LIMITS['128k']],
+  // Studio commercial loco-Plus / loco-Flash / loco-Turbo
+  [/^loco-plus-latest$/, LIMITS['1m']], // Commercial latest: 1M
+  [/^loco-plus.*$/, LIMITS['128k']], // Standard: 128K
+  [/^loco-flash-latest$/, LIMITS['1m']],
+  [/^loco-turbo.*$/, LIMITS['128k']],
 
-  // Qwen Vision Models
-  [/^qwen3-vl-plus$/, LIMITS['256k']], // Qwen3-VL-Plus: 256K input
-  [/^qwen-vl-max.*$/, LIMITS['128k']],
+  // LOCO Vision Models
+  [/^loco3-vl-plus$/, LIMITS['256k']], // loco3-VL-Plus: 256K input
+  [/^loco-vl-max.*$/, LIMITS['128k']],
 
-  // Generic vision-model: same as qwen-vl-max (128K token context)
+  // Generic vision-model: same as loco-vl-max (128K token context)
   [/^vision-model$/, LIMITS['128k']],
 
   // -------------------
@@ -190,25 +190,25 @@ const PATTERNS: Array<[RegExp, TokenCount]> = [
  */
 const OUTPUT_PATTERNS: Array<[RegExp, TokenCount]> = [
   // -------------------
-  // Alibaba / Qwen - DashScope Models
+  // Alibaba / LOCO - DashScope Models
   // -------------------
-  // Qwen3-Coder-Plus: 65,536 max output tokens
-  [/^qwen3-coder-plus(-.*)?$/, LIMITS['64k']],
+  // loco3-Coder-Plus: 65,536 max output tokens
+  [/^loco3-coder-plus(-.*)?$/, LIMITS['64k']],
 
-  // Generic coder-model: same as qwen3-coder-plus (64K max output tokens)
+  // Generic coder-model: same as loco3-coder-plus (64K max output tokens)
   [/^coder-model$/, LIMITS['64k']],
 
-  // Qwen3-Max: 65,536 max output tokens
-  [/^qwen3-max(-preview)?(-.*)?$/, LIMITS['64k']],
+  // loco3-Max: 65,536 max output tokens
+  [/^loco3-max(-preview)?(-.*)?$/, LIMITS['64k']],
 
-  // Qwen-VL-Max-Latest: 8,192 max output tokens
-  [/^qwen-vl-max-latest$/, LIMITS['8k']],
+  // loco-VL-Max-Latest: 8,192 max output tokens
+  [/^loco-vl-max-latest$/, LIMITS['8k']],
 
-  // Generic vision-model: same as qwen-vl-max-latest (8K max output tokens)
+  // Generic vision-model: same as loco-vl-max-latest (8K max output tokens)
   [/^vision-model$/, LIMITS['8k']],
 
-  // Qwen3-VL-Plus: 32K max output tokens
-  [/^qwen3-vl-plus$/, LIMITS['32k']],
+  // loco3-VL-Plus: 32K max output tokens
+  [/^loco3-vl-plus$/, LIMITS['32k']],
 
   // Deepseek-chat: 8k max tokens
   [/^deepseek-chat$/, LIMITS['8k']],

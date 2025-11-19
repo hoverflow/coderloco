@@ -15,7 +15,7 @@ import {
 } from '../../config/extension.js';
 import { createExtension } from '../../test-utils/createExtension.js';
 import { useExtensionUpdates } from './useExtensionUpdates.js';
-import { QWEN_DIR, type GeminiCLIExtension } from '@coderloco/coderloco-core';
+import { loco_DIR, type GeminiCLIExtension } from '@coderloco/coderloco-core';
 import { renderHook, waitFor } from '@testing-library/react';
 import { MessageType } from '../types.js';
 import { ExtensionEnablementManager } from '../../config/extensions/extensionEnablement.js';
@@ -47,7 +47,7 @@ describe('useExtensionUpdates', () => {
       path.join(os.tmpdir(), 'gemini-cli-test-home-'),
     );
     vi.mocked(os.homedir).mockReturnValue(tempHomeDir);
-    userExtensionsDir = path.join(tempHomeDir, QWEN_DIR, 'extensions');
+    userExtensionsDir = path.join(tempHomeDir, loco_DIR, 'extensions');
     fs.mkdirSync(userExtensionsDir, { recursive: true });
     vi.mocked(checkForAllExtensionUpdates).mockReset();
     vi.mocked(updateExtension).mockReset();

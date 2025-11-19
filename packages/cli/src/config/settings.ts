@@ -11,7 +11,7 @@ import * as dotenv from 'dotenv';
 import process from 'node:process';
 import {
   FatalConfigError,
-  QWEN_DIR,
+  loco_DIR,
   getErrorMessage,
   Storage,
 } from '@coderloco/coderloco-core';
@@ -49,7 +49,7 @@ function getMergeStrategyForPath(path: string[]): MergeStrategy | undefined {
 
 export type { Settings, MemoryImportFormat };
 
-export const SETTINGS_DIRECTORY_NAME = '.qwen';
+export const SETTINGS_DIRECTORY_NAME = '.loco';
 export const USER_SETTINGS_PATH = Storage.getGlobalSettingsPath();
 export const USER_SETTINGS_DIR = path.dirname(USER_SETTINGS_PATH);
 export const DEFAULT_EXCLUDED_ENV_VARS = ['DEBUG', 'DEBUG_MODE'];
@@ -139,21 +139,21 @@ const MIGRATION_MAP: Record<string, string> = {
 };
 
 export function getSystemSettingsPath(): string {
-  if (process.env['QWEN_CODE_SYSTEM_SETTINGS_PATH']) {
-    return process.env['QWEN_CODE_SYSTEM_SETTINGS_PATH'];
+  if (process.env['loco_CODE_SYSTEM_SETTINGS_PATH']) {
+    return process.env['loco_CODE_SYSTEM_SETTINGS_PATH'];
   }
   if (platform() === 'darwin') {
-    return '/Library/Application Support/QwenCode/settings.json';
+    return '/Library/Application Support/locoCode/settings.json';
   } else if (platform() === 'win32') {
-    return 'C:\\ProgramData\\qwen-code\\settings.json';
+    return 'C:\\ProgramData\\loco-code\\settings.json';
   } else {
-    return '/etc/qwen-code/settings.json';
+    return '/etc/loco-code/settings.json';
   }
 }
 
 export function getSystemDefaultsPath(): string {
-  if (process.env['QWEN_CODE_SYSTEM_DEFAULTS_PATH']) {
-    return process.env['QWEN_CODE_SYSTEM_DEFAULTS_PATH'];
+  if (process.env['loco_CODE_SYSTEM_DEFAULTS_PATH']) {
+    return process.env['loco_CODE_SYSTEM_DEFAULTS_PATH'];
   }
   return path.join(
     path.dirname(getSystemSettingsPath()),
@@ -487,8 +487,8 @@ export class LoadedSettings {
 function findEnvFile(startDir: string): string | null {
   let currentDir = path.resolve(startDir);
   while (true) {
-    // prefer gemini-specific .env under QWEN_DIR
-    const geminiEnvPath = path.join(currentDir, QWEN_DIR, '.env');
+    // prefer gemini-specific .env under loco_DIR
+    const geminiEnvPath = path.join(currentDir, loco_DIR, '.env');
     if (fs.existsSync(geminiEnvPath)) {
       return geminiEnvPath;
     }
@@ -499,7 +499,7 @@ function findEnvFile(startDir: string): string | null {
     const parentDir = path.dirname(currentDir);
     if (parentDir === currentDir || !parentDir) {
       // check .env under home as fallback, again preferring gemini-specific .env
-      const homeGeminiEnvPath = path.join(homedir(), QWEN_DIR, '.env');
+      const homeGeminiEnvPath = path.join(homedir(), loco_DIR, '.env');
       if (fs.existsSync(homeGeminiEnvPath)) {
         return homeGeminiEnvPath;
       }
@@ -556,7 +556,7 @@ export function loadEnvironment(settings: Settings): void {
 
       const excludedVars =
         settings?.advanced?.excludedEnvVars || DEFAULT_EXCLUDED_ENV_VARS;
-      const isProjectEnvFile = !envFilePath.includes(QWEN_DIR);
+      const isProjectEnvFile = !envFilePath.includes(loco_DIR);
 
       for (const key in parsedEnv) {
         if (Object.hasOwn(parsedEnv, key)) {

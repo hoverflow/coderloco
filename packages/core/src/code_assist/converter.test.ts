@@ -304,11 +304,11 @@ describe('converter', () => {
       const codeAssistRes: CaGenerateContentResponse = {
         response: {
           candidates: [],
-          modelVersion: 'qwen3-coder-plus',
+          modelVersion: 'loco3-coder-plus',
         },
       };
       const genaiRes = fromGenerateContentResponse(codeAssistRes);
-      expect(genaiRes.modelVersion).toEqual('qwen3-coder-plus');
+      expect(genaiRes.modelVersion).toEqual('loco3-coder-plus');
     });
   });
 

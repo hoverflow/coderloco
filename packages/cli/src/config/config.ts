@@ -13,7 +13,7 @@ import { extensionsCommand } from '../commands/extensions.js';
 import {
   ApprovalMode,
   Config,
-  DEFAULT_QWEN_EMBEDDING_MODEL,
+  DEFAULT_loco_EMBEDDING_MODEL,
   DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
   EditTool,
   FileDiscoveryService,
@@ -131,9 +131,9 @@ export async function parseArguments(settings: Settings): Promise<CliArgs> {
   const rawArgv = hideBin(process.argv);
   const yargsInstance = yargs(rawArgv)
     .locale('en')
-    .scriptName('qwen')
+    .scriptName('loco')
     .usage(
-      'Usage: qwen [options] [command]\n\nQwen Code - Launch an interactive CLI, use -p/--prompt for non-interactive mode',
+      'Usage: LOCO [options] [command]\n\nLOCO Code - Launch an interactive CLI, use -p/--prompt for non-interactive mode',
     )
     .option('telemetry', {
       type: 'boolean',
@@ -198,13 +198,13 @@ export async function parseArguments(settings: Settings): Promise<CliArgs> {
     })
     .option('proxy', {
       type: 'string',
-      description: 'Proxy for Qwen Code, like schema://user:password@host:port',
+      description: 'Proxy for LOCO Code, like schema://user:password@host:port',
     })
     .deprecateOption(
       'proxy',
       'Use the "proxy" setting in settings.json instead. This flag will be removed in a future version.',
     )
-    .command('$0 [query..]', 'Launch Qwen Code CLI', (yargsInstance: Argv) =>
+    .command('$0 [query..]', 'Launch LOCO Code CLI', (yargsInstance: Argv) =>
       yargsInstance
         .positional('query', {
           description:
@@ -693,7 +693,7 @@ export async function loadCliConfig(
   const resolvedModel =
     argv.model ||
     process.env['OPENAI_MODEL'] ||
-    process.env['QWEN_MODEL'] ||
+    process.env['loco_MODEL'] ||
     settings.model?.name;
 
   const sandboxConfig = await loadSandboxConfig(settings, argv);
@@ -704,7 +704,7 @@ export async function loadCliConfig(
 
   return new Config({
     sessionId,
-    embeddingModel: DEFAULT_QWEN_EMBEDDING_MODEL,
+    embeddingModel: DEFAULT_loco_EMBEDDING_MODEL,
     sandbox: sandboxConfig,
     targetDir: cwd,
     includeDirectories,

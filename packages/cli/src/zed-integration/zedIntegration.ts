@@ -136,10 +136,10 @@ class GeminiAgent {
           'Requires setting the `OPENAI_API_KEY` environment variable',
       },
       {
-        id: AuthType.QWEN_OAUTH,
-        name: 'Qwen OAuth',
+        id: AuthType.loco_OAUTH,
+        name: 'LOCO OAuth',
         description:
-          'OAuth authentication for Qwen models with 2000 daily requests',
+          'OAuth authentication for LOCO models with 2000 daily requests',
       },
     ];
 

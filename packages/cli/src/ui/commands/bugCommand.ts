@@ -34,7 +34,7 @@ export const bugCommand: SlashCommand = {
     }
 
     let bugReportUrl =
-      'https://github.com/QwenLM/qwen-code/issues/new?template=bug_report.yml&title={title}&info={info}';
+      'https://github.com/locoLM/loco-code/issues/new?template=bug_report.yml&title={title}&info={info}';
 
     const bugCommandSettings = context.services.config?.getBugCommand();
     if (bugCommandSettings?.urlTemplate) {

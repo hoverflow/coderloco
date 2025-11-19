@@ -89,7 +89,7 @@ import {
   DEFAULT_FILE_FILTERING_OPTIONS,
   DEFAULT_MEMORY_FILE_FILTERING_OPTIONS,
 } from './constants.js';
-import { DEFAULT_QWEN_EMBEDDING_MODEL, DEFAULT_QWEN_MODEL } from './models.js';
+import { DEFAULT_loco_EMBEDDING_MODEL, DEFAULT_loco_MODEL } from './models.js';
 import { Storage } from './storage.js';
 import { DEFAULT_DASHSCOPE_BASE_URL } from '../core/openaiContentGenerator/constants.js';
 
@@ -244,7 +244,7 @@ export interface ConfigParameters {
   usageStatisticsEnabled?: boolean;
   fileFiltering?: {
     respectGitIgnore?: boolean;
-    respectQwenIgnore?: boolean;
+    respectlocoIgnore?: boolean;
     enableRecursiveFileSearch?: boolean;
     disableFuzzySearch?: boolean;
   };
@@ -336,7 +336,7 @@ export class Config {
   private baseLlmClient!: BaseLlmClient;
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
-    respectQwenIgnore: boolean;
+    respectlocoIgnore: boolean;
     enableRecursiveFileSearch: boolean;
     disableFuzzySearch: boolean;
   };
@@ -401,7 +401,7 @@ export class Config {
 
   constructor(params: ConfigParameters) {
     this.sessionId = params.sessionId;
-    this.embeddingModel = params.embeddingModel ?? DEFAULT_QWEN_EMBEDDING_MODEL;
+    this.embeddingModel = params.embeddingModel ?? DEFAULT_loco_EMBEDDING_MODEL;
     this.fileSystemService = new StandardFileSystemService();
     this.sandbox = params.sandbox;
     this.targetDir = path.resolve(params.targetDir);
@@ -435,14 +435,14 @@ export class Config {
     };
     this.gitCoAuthor = {
       enabled: params.gitCoAuthor?.enabled ?? true,
-      name: params.gitCoAuthor?.name ?? 'Qwen-Coder',
-      email: params.gitCoAuthor?.email ?? 'qwen-coder@alibabacloud.com',
+      name: params.gitCoAuthor?.name ?? 'loco-Coder',
+      email: params.gitCoAuthor?.email ?? 'loco-coder@alibabacloud.com',
     };
     this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
 
     this.fileFiltering = {
       respectGitIgnore: params.fileFiltering?.respectGitIgnore ?? true,
-      respectQwenIgnore: params.fileFiltering?.respectQwenIgnore ?? true,
+      respectlocoIgnore: params.fileFiltering?.respectlocoIgnore ?? true,
       enableRecursiveFileSearch:
         params.fileFiltering?.enableRecursiveFileSearch ?? true,
       disableFuzzySearch: params.fileFiltering?.disableFuzzySearch ?? false,
@@ -636,7 +636,7 @@ export class Config {
   }
 
   getModel(): string {
-    return this.contentGeneratorConfig?.model || DEFAULT_QWEN_MODEL;
+    return this.contentGeneratorConfig?.model || DEFAULT_loco_MODEL;
   }
 
   async setModel(
@@ -845,14 +845,14 @@ export class Config {
   getFileFilteringRespectGitIgnore(): boolean {
     return this.fileFiltering.respectGitIgnore;
   }
-  getFileFilteringRespectQwenIgnore(): boolean {
-    return this.fileFiltering.respectQwenIgnore;
+  getFileFilteringRespectlocoIgnore(): boolean {
+    return this.fileFiltering.respectlocoIgnore;
   }
 
   getFileFilteringOptions(): FileFilteringOptions {
     return {
       respectGitIgnore: this.fileFiltering.respectGitIgnore,
-      respectQwenIgnore: this.fileFiltering.respectQwenIgnore,
+      respectlocoIgnore: this.fileFiltering.respectlocoIgnore,
     };
   }
 
@@ -1187,7 +1187,7 @@ export class Config {
     registerCoreTool(ExitPlanModeTool, this);
     registerCoreTool(WebFetchTool, this);
     // Conditionally register web search tool if web search provider is configured
-    // buildWebSearchConfig ensures qwen-oauth users get dashscope provider, so
+    // buildWebSearchConfig ensures loco-oauth users get dashscope provider, so
     // if tool is registered, config must exist
     if (this.getWebSearchConfig()) {
       registerCoreTool(WebSearchTool, this);

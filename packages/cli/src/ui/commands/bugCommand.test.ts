@@ -26,7 +26,7 @@ describe('bugCommand', () => {
       nodeVersion: 'v20.0.0',
       npmVersion: '10.0.0',
       sandboxEnv: 'test',
-      modelVersion: 'qwen3-coder-plus',
+      modelVersion: 'loco3-coder-plus',
       selectedAuthType: '',
       ideClient: 'VSCode',
       sessionId: 'test-session-id',
@@ -36,7 +36,7 @@ describe('bugCommand', () => {
           ? GIT_COMMIT_INFO
           : undefined,
     });
-    vi.stubEnv('SANDBOX', 'qwen-test');
+    vi.stubEnv('SANDBOX', 'loco-test');
   });
 
   afterEach(() => {
@@ -62,7 +62,7 @@ describe('bugCommand', () => {
         : '';
     const expectedInfo = `
 * **CLI Version:** 0.1.0
-${gitCommitLine}* **Model:** qwen3-coder-plus
+${gitCommitLine}* **Model:** loco3-coder-plus
 * **Sandbox:** test
 * **OS Platform:** test-platform
 * **OS Arch:** x64
@@ -75,7 +75,7 @@ ${gitCommitLine}* **Model:** qwen3-coder-plus
 * **IDE Client:** VSCode
 `;
     const expectedUrl =
-      'https://github.com/QwenLM/qwen-code/issues/new?template=bug_report.yml&title=A%20test%20bug&info=' +
+      'https://github.com/locoLM/loco-code/issues/new?template=bug_report.yml&title=A%20test%20bug&info=' +
       encodeURIComponent(expectedInfo);
 
     expect(open).toHaveBeenCalledWith(expectedUrl);
@@ -101,7 +101,7 @@ ${gitCommitLine}* **Model:** qwen3-coder-plus
         : '';
     const expectedInfo = `
 * **CLI Version:** 0.1.0
-${gitCommitLine}* **Model:** qwen3-coder-plus
+${gitCommitLine}* **Model:** loco3-coder-plus
 * **Sandbox:** test
 * **OS Platform:** test-platform
 * **OS Arch:** x64
@@ -129,7 +129,7 @@ ${gitCommitLine}* **Model:** qwen3-coder-plus
       nodeVersion: 'v20.0.0',
       npmVersion: '10.0.0',
       sandboxEnv: 'test',
-      modelVersion: 'qwen3-coder-plus',
+      modelVersion: 'loco3-coder-plus',
       selectedAuthType: AuthType.USE_OPENAI,
       ideClient: 'VSCode',
       sessionId: 'test-session-id',
@@ -158,7 +158,7 @@ ${gitCommitLine}* **Model:** qwen3-coder-plus
         : '';
     const expectedInfo = `
 * **CLI Version:** 0.1.0
-${gitCommitLine}* **Model:** qwen3-coder-plus
+${gitCommitLine}* **Model:** loco3-coder-plus
 * **Sandbox:** test
 * **OS Platform:** test-platform
 * **OS Arch:** x64
@@ -172,7 +172,7 @@ ${gitCommitLine}* **Model:** qwen3-coder-plus
 * **IDE Client:** VSCode
 `;
     const expectedUrl =
-      'https://github.com/QwenLM/qwen-code/issues/new?template=bug_report.yml&title=OpenAI%20bug&info=' +
+      'https://github.com/locoLM/loco-code/issues/new?template=bug_report.yml&title=OpenAI%20bug&info=' +
       encodeURIComponent(expectedInfo);
 
     expect(open).toHaveBeenCalledWith(expectedUrl);
